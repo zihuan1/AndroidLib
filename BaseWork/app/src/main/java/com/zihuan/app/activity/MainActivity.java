@@ -1,4 +1,4 @@
-package com.zihuan.app.activity;
+﻿package com.zihuan.app.activity;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -122,9 +122,7 @@ public class MainActivity extends BaseActivity {
             case R.id.ll_guzhang:
                 m_vpMain.setCurrentItem(2, false);
                 m_tvTitle.setText("3");
-  
                 break;
-      
             case R.id.ll_wode:
                 m_vpMain.setCurrentItem(3, false);
                 m_rlTitle.setVisibility(View.GONE);
