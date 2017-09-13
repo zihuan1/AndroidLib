@@ -112,15 +112,15 @@ public class MainActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.ll_shebei:
                 m_vpMain.setCurrentItem(0, false);
-                m_tvTitle.setText("设备");
+                m_tvTitle.setText("1");
                 break;
             case R.id.ll_yujing:
                 m_vpMain.setCurrentItem(1, false);
-                m_tvTitle.setText("预警");
+                m_tvTitle.setText("2");
                 break;
             case R.id.ll_guzhang:
                 m_vpMain.setCurrentItem(2, false);
-                m_tvTitle.setText("故障");
+                m_tvTitle.setText("3");
                 break;
             case R.id.ll_wode:
                 m_vpMain.setCurrentItem(3, false);
