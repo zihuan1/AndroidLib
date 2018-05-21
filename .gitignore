@@ -1,5 +1,7 @@
 .gradle
 BaseWork/.idea
 BaseWork/app/build
+
 BaseWork/build
-BaseWork/app/app.iml
+*app.iml
+BaseWork/local.properties
