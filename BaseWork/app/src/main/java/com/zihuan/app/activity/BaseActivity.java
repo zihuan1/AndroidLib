@@ -1,25 +1,16 @@
 package com.zihuan.app.activity;
 
-import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 
+import com.jaeger.library.StatusBarUtil;
 import com.jcodecraeer.xrecyclerview.ProgressStyle;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.lzy.okhttputils.OkHttpUtils;
@@ -30,56 +21,40 @@ import com.zihuan.app.task.OkHttpListener;
 import com.zihuan.app.u.DateUtil;
 import com.zihuan.app.u.Logger;
 import com.zihuan.app.u.U;
-import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+import butterknife.ButterKnife;
 
 
 /**
  */
-public class BaseActivity extends FragmentActivity {
+public abstract class BaseActivity extends FragmentActivity {
     public String uid;
     public String token = "";
-    public String role = "";
-    public int page = 1;
 
-    @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (!U.CheckNetworkConnected()) {
             U.ShowToast("请检测网络后再试");
         }
-        hideKeyboard();
-        initSystemBar(this, R.color.colorPrimary);
+        setContentView(getLayoutId());
+        ButterKnife.bind(this);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        /*BasicPushNotificationBuilder builder = new BasicPushNotificationBuilder(this);
-        builder.developerArg0 = "Basic builder 1";
-        builder.notificationDefaults = Notification.DEFAULT_SOUND
-                | Notification.DEFAULT_VIBRATE
-                | Notification.DEFAULT_LIGHTS;  // 设置为铃声、震动、呼吸灯闪烁都要
-        JPushInterface.setPushNotificationBuilder(1, builder);*/
-
-        //设置 actionSheet 样式 ios7
-//        setTheme(R.style.ActionSheetStyleiOS7);
-
+        StatusBarUtil.setColorNoTranslucent(this, getResources().getColor(R.color.colorPrimary));
+        initView();
+        initData();
     }
 
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
 
     @Override
     protected void onResume() {
         super.onResume();
         uid = UserManager.getInstance().userData.getUid();
-        role = UserManager.getInstance().userData.getRole();
-        if (!isNull2(UserManager.getInstance().userData.getToken())) {
+        if (!isNull2(UserManager.getInstance().userData.getUid())) {
+            uid = UserManager.getInstance().userData.getUid();
             token = UserManager.getInstance().userData.getToken();
         }
     }
@@ -87,7 +62,6 @@ public class BaseActivity extends FragmentActivity {
     @Override
     protected void onPause() {
         super.onPause();
-//        JPushInterface.onPause(this);
     }
 
 
@@ -116,53 +90,6 @@ public class BaseActivity extends FragmentActivity {
         xRecyclerView.setLoadingMoreEnabled(false);
     }
 
-    //发短信
-    private void sendSMS() {
-        Uri smsToUri = Uri.parse("smsto:");
-        Intent sendIntent = new Intent(Intent.ACTION_VIEW, smsToUri);
-        //sendIntent.putExtra("address", "123456"); // 电话号码，这行去掉的话，默认就没有电话
-//        sendIntent.putExtra("sms_body", mEditText.getText().toString());
-        sendIntent.setType("vnd.android-dir/mms-sms");
-        startActivityForResult(sendIntent, 1002);
-    }
-
-//    @Override
-//    public Resources getResources() {
-//        Resources res = super.getResources();
-//        Configuration config = new Configuration();
-//        config.setToDefaults();
-//        res.updateConfiguration(config, res.getDisplayMetrics());
-//        return res;
-//    }
-
-    /***
-     * 设置系统状态栏的颜色
-     *
-     * @param activity
-     * @param colorId
-     */
-    public static void initSystemBar(Activity activity, int colorId) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            setTranslucentStatus(activity, true);
-        }
-        SystemBarTintManager tintManager = new SystemBarTintManager(activity);
-        tintManager.setStatusBarTintEnabled(true);
-        // 使用颜色资源
-        tintManager.setStatusBarTintResource(colorId);
-    }
-
-    @TargetApi(19)
-    private static void setTranslucentStatus(Activity activity, boolean on) {
-        Window win = activity.getWindow();
-        WindowManager.LayoutParams winParams = win.getAttributes();
-        final int bits = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
-        if (on) {
-            winParams.flags |= bits;
-        } else {
-            winParams.flags &= ~bits;
-        }
-        win.setAttributes(winParams);
-    }
 
     //    空置点击事件
     public void emptyClick(View view) {
@@ -251,53 +178,6 @@ public class BaseActivity extends FragmentActivity {
         return res;
     }
 
-    private String tel;
-
-    //拨号功能
-    public void tel(final String tel) {
-        this.tel = tel.replace(" ", "");
-//        new CallDialog(this, 1).getMyDialog("拨打电话", "是否拨号？");
-    }
-
-    //    判断电话号码格式
-    public static boolean isMobileNO(String mobiles) {
-        if (!TextUtils.isEmpty(mobiles)) {
-
-            String expression = "^((0\\d{2,3}-\\d{7,8})|(0\\d{2,3}-\\d{11})|(1[35784]\\d{9}))$";
-
-            Pattern p = Pattern.compile(expression);//((13[0-9])|(15[^4,\D])|(18[0,5-9]))\d{8}
-            Matcher m = p.matcher(mobiles);
-            return m.matches();
-        } else {
-            U.ShowToast("手机号不能为空");
-            return false;
-        }
-    }
-
-
-//    @Override
-//    public void isY(boolean flg, int wht, int pos) {
-//        if (flg) {
-//            if (!isMobileNO(tel)) {
-//                U.ShowToast("格式不正确");
-//                Log.e("----", "tel=" + tel);
-//            } else {
-//                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:"
-//                        + tel));
-//                startActivity(intent);
-//            }
-//        }
-//    }
-
-
-    public boolean isNetWork() {
-        if (U.CheckNetworkConnected()) {
-            return true;
-        }
-        U.ShowToast("网络异常");
-        return false;
-    }
-
     public void back(View view) {
         finish();
     }
@@ -312,27 +192,12 @@ public class BaseActivity extends FragmentActivity {
         Logger.tag("--------登录了------" + uid);
         return true;
     }
+    // 获取布局文件
+    public abstract int getLayoutId();
 
-    /***
-     * 隐藏软键盘
-     */
-    public void hideKeyboard() {
-        InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        View view = this.getCurrentFocus();
-        if (view != null) {
-            if (inputManager != null) {
-                inputManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-            }
-        }
-    }
+    // 初始化view
+    public abstract void initView();
 
-    //    是否是自己
-    public boolean isMe(String u) {
-        if (uid == u) {
-            return true;
-        }
-        return false;
-    }
-
-
+    // 数据加载
+    public abstract void initData();
 }
