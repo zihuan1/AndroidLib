@@ -111,22 +111,14 @@ public class Fm_1 extends BaseFragment implements ViewOnItemClick, ViewOnItemLon
 //                xView.setNoMore(true);
             }
         });
-        Observable.create(new ObservableOnSubscribe<Integer>() {
-            @Override
-            public void subscribe(ObservableEmitter<Integer> emitter) {
-                UserEntity entity = new UserEntity();
-                entity.setUserName("");
-                emitter.onNext(mActivity.getDataBase().getUserDao().addUser(entity));
-            }
+        Observable.create((ObservableOnSubscribe<String>) emitter -> {
+            UserEntity entity = new UserEntity();
+            entity.setUserName("明明如月");
+            emitter.onNext(mActivity.getDataBase().getUserDao().addUser(entity) + "");
         })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Integer>() {
-                    @Override
-                    public void accept(Integer integer) {
-                        Logger.tag("条数 " + integer);
-                    }
-                });
+                .subscribe(integer -> Logger.tag("条数 " + integer));
     }
 
     @Override

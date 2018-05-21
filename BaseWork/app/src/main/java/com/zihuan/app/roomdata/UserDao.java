@@ -23,7 +23,7 @@ public interface UserDao {
 
     //添加
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    int addUser(UserEntity userEntity);
+    long addUser(UserEntity userEntity);
 
     //删除
     @Delete()

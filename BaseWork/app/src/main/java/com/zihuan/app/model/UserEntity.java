@@ -13,11 +13,21 @@ import android.text.TextUtils;
 public class UserEntity {
 
     @PrimaryKey(autoGenerate = true)//主键自动增长
+    private int id;
     private String uid;
     private String password;
     private String token;
 
     private String userName;
+
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     @Ignore
     private Bitmap bitmap;
