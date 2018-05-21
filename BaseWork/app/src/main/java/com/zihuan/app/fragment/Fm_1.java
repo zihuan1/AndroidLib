@@ -1,8 +1,15 @@
 package com.zihuan.app.fragment;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.view.View;
 import android.widget.TextView;
 
+import com.github.dfqin.grantor.PermissionListener;
+import com.github.dfqin.grantor.PermissionsUtil;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.zihuan.app.R;
 import com.zihuan.app.adapter.EmptyAdapter;
@@ -25,6 +32,8 @@ public class Fm_1 extends BaseFragment implements ViewOnItemClick, ViewOnItemLon
     XRecyclerView xView;
     EmptyAdapter mAdapter;
     List<UserEntity> mList = new ArrayList<>();
+    private static String PERMISSIONS[] = new String[]{ Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
     @Override
     protected int getLayoutId() {
@@ -35,6 +44,28 @@ public class Fm_1 extends BaseFragment implements ViewOnItemClick, ViewOnItemLon
 
     @Override
     public void initView(View view) {
+        if (Build.VERSION.SDK_INT < 23) {
+            if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                U.ShowToast("允许");
+            } else {
+                U.ShowToast("权限被拒绝,请前往设置页面进行设置");
+            }
+        } else {
+            //TODO 相机权限请求 sdk>=23 6.0↑
+            PermissionsUtil.requestPermission(mActivity, new PermissionListener() {
+                @Override
+                public void permissionGranted(@NonNull String[] permission) {
+                    U.ShowToast("允许");
+                }
+
+                @Override
+                public void permissionDenied(@NonNull String[] permission) {
+                    U.ShowToast("读写被拒绝");
+                }
+            }, PERMISSIONS);
+        }
+
+
         mActivity.iniXrecyclerView(xView);
         mAdapter = new EmptyAdapter(mList, this);
 //        xView.setEmptyView();

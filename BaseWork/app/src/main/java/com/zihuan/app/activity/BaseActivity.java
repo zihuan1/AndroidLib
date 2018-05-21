@@ -1,5 +1,6 @@
 package com.zihuan.app.activity;
 
+import android.Manifest;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
