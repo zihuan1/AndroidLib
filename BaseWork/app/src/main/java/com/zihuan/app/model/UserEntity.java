@@ -1,16 +1,34 @@
 package com.zihuan.app.model;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
+import android.graphics.Bitmap;
 import android.text.TextUtils;
 
 /**
  */
+
+@Entity(tableName = "user_table")
 public class UserEntity {
 
+    @PrimaryKey(autoGenerate = true)//主键自动增长
     private String uid;
     private String password;
     private String token;
+
     private String userName;
 
+    @Ignore
+    private Bitmap bitmap;
+
+    public Bitmap getBitmap() {
+        return bitmap;
+    }
+
+    public void setBitmap(Bitmap bitmap) {
+        this.bitmap = bitmap;
+    }
 
     public String getUid() {
         return uid;

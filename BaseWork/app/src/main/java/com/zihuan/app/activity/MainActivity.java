@@ -2,12 +2,10 @@
 package com.zihuan.app.activity;
 
 
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.zihuan.app.R;
@@ -16,13 +14,13 @@ import com.zihuan.app.fragment.Fm_3;
 import com.zihuan.app.fragment.Fm_1;
 import com.zihuan.app.fragment.Fm_4;
 import com.zihuan.app.fragment.Fm_2;
+import com.zihuan.app.model.UserEntity;
 import com.zihuan.app.view.NoScrollViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class MainActivity extends BaseActivity {

@@ -12,12 +12,17 @@ import android.text.TextUtils;
 import android.view.View;
 
 import com.jaeger.library.StatusBarUtil;
+import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.jcodecraeer.xrecyclerview.ProgressStyle;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.lzy.okhttputils.OkHttpUtils;
+import com.xiasuhuei321.loadingdialog.view.LoadingDialog;
+import com.zihuan.app.Constant;
 import com.zihuan.app.R;
 import com.zihuan.app.UserManager;
 import com.zihuan.app.model.BaseBeanModel;
+import com.zihuan.app.roomdata.UserDataBase;
+import com.zihuan.app.task.Api;
 import com.zihuan.app.task.OkHttpListener;
 import com.zihuan.app.u.DateUtil;
 import com.zihuan.app.u.Logger;
@@ -27,6 +32,10 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.ButterKnife;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+import retrofit2.Retrofit;
 
 
 /**
@@ -34,6 +43,8 @@ import butterknife.ButterKnife;
 public abstract class BaseActivity extends FragmentActivity {
     public String uid;
     public String token = "";
+
+    UserDataBase mDataBase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -193,6 +204,7 @@ public abstract class BaseActivity extends FragmentActivity {
         Logger.tag("--------登录了------" + uid);
         return true;
     }
+
     // 获取布局文件
     public abstract int getLayoutId();
 
@@ -201,4 +213,41 @@ public abstract class BaseActivity extends FragmentActivity {
 
     // 数据加载
     public abstract void initData();
+
+    LoadingDialog dialog;
+
+    public void showDialog() {
+        dialog = new LoadingDialog(this);
+        dialog.setLoadingText("加载中...");//设置loading时显示的文字
+        dialog.setInterceptBack(false);
+        dialog.show();
+    }
+
+    public void dismissDialog() {
+        if (dialog == null) return;
+        dialog.close();
+        dialog = null;
+    }
+
+    public UserDataBase getDataBase() {
+        return mDataBase == null ? mDataBase = UserDataBase.getDatabase(this) : mDataBase;
+    }
+
+    private static Retrofit RetrofitApi() {
+
+        return new Retrofit.Builder()
+                .baseUrl(Constant.BASE_URL)
+//                .client(builder.build())//添加okhttp设置
+//                .addConverterFactory(GsonConverterFactory.create())//gson
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())//rx适配器
+                .build();
+    }
+
+    public void getRetiofitJsonRequest(Observer observer, String url, Map map) {
+        Api service = RetrofitApi().create(Api.class);
+        service.listRepos(url, map)
+                .subscribeOn(Schedulers.io())//在IO线程进行网络请求
+                .observeOn(AndroidSchedulers.mainThread())//回到主线程去处理请求结果
+                .subscribe(observer);
+    }
 }

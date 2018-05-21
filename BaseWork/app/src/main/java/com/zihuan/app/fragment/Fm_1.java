@@ -14,6 +14,7 @@ import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.zihuan.app.R;
 import com.zihuan.app.adapter.EmptyAdapter;
 import com.zihuan.app.model.UserEntity;
+import com.zihuan.app.u.Logger;
 import com.zihuan.app.u.U;
 import com.zihuan.app.xrv.ViewOnItemClick;
 import com.zihuan.app.xrv.ViewOnItemLongClick;
@@ -22,6 +23,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  */
@@ -32,7 +40,7 @@ public class Fm_1 extends BaseFragment implements ViewOnItemClick, ViewOnItemLon
     XRecyclerView xView;
     EmptyAdapter mAdapter;
     List<UserEntity> mList = new ArrayList<>();
-    private static String PERMISSIONS[] = new String[]{ Manifest.permission.READ_EXTERNAL_STORAGE,
+    private static String PERMISSIONS[] = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
     @Override
@@ -103,6 +111,22 @@ public class Fm_1 extends BaseFragment implements ViewOnItemClick, ViewOnItemLon
 //                xView.setNoMore(true);
             }
         });
+        Observable.create(new ObservableOnSubscribe<Integer>() {
+            @Override
+            public void subscribe(ObservableEmitter<Integer> emitter) {
+                UserEntity entity = new UserEntity();
+                entity.setUserName("");
+                emitter.onNext(mActivity.getDataBase().getUserDao().addUser(entity));
+            }
+        })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Integer>() {
+                    @Override
+                    public void accept(Integer integer) {
+                        Logger.tag("条数 " + integer);
+                    }
+                });
     }
 
     @Override
