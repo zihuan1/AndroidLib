@@ -31,7 +31,6 @@ public class Fm_4 extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
     }
 
 

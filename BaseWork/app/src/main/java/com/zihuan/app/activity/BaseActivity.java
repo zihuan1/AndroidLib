@@ -1,6 +1,5 @@
 package com.zihuan.app.activity;
 
-import android.Manifest;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -16,7 +15,6 @@ import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.jcodecraeer.xrecyclerview.ProgressStyle;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.lzy.okhttputils.OkHttpUtils;
-import com.xiasuhuei321.loadingdialog.view.LoadingDialog;
 import com.zihuan.app.Constant;
 import com.zihuan.app.R;
 import com.zihuan.app.UserManager;
@@ -214,20 +212,20 @@ public abstract class BaseActivity extends FragmentActivity {
     // 数据加载
     public abstract void initData();
 
-    LoadingDialog dialog;
-
-    public void showDialog() {
-        dialog = new LoadingDialog(this);
-        dialog.setLoadingText("加载中...");//设置loading时显示的文字
-        dialog.setInterceptBack(false);
-        dialog.show();
-    }
-
-    public void dismissDialog() {
-        if (dialog == null) return;
-        dialog.close();
-        dialog = null;
-    }
+//    LoadingDialog dialog;
+//
+//    public void showDialog() {
+//        dialog = new LoadingDialog(this);
+//        dialog.setLoadingText("加载中...");//设置loading时显示的文字
+//        dialog.setInterceptBack(false);
+//        dialog.show();
+//    }
+//
+//    public void dismissDialog() {
+//        if (dialog == null) return;
+//        dialog.close();
+//        dialog = null;
+//    }
 
     public UserDataBase getDataBase() {
         return mDataBase == null ? mDataBase = UserDataBase.getDatabase(this) : mDataBase;

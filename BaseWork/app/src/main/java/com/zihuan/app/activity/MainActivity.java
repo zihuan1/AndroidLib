@@ -1,4 +1,3 @@
-
 package com.zihuan.app.activity;
 
 
@@ -6,36 +5,36 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.zihuan.app.R;
 import com.zihuan.app.adapter.ViewPAdapter;
-import com.zihuan.app.fragment.Fm_3;
 import com.zihuan.app.fragment.Fm_1;
-import com.zihuan.app.fragment.Fm_4;
 import com.zihuan.app.fragment.Fm_2;
-import com.zihuan.app.model.UserEntity;
+import com.zihuan.app.fragment.Fm_3;
+import com.zihuan.app.fragment.Fm_4;
 import com.zihuan.app.view.NoScrollViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.OnClick;
 
 public class MainActivity extends BaseActivity {
 
-    @Bind(R.id.vp_main)
+    @BindView(R.id.vp_main)
     NoScrollViewPager m_vpMain;
-    @Bind(R.id.tv_shebei)
+    @BindView(R.id.tv_shebei)
     TextView m_tvShebei;
-    @Bind(R.id.ll_shebei)
+    @BindView(R.id.ll_shebei)
     LinearLayout m_llShebei;
-    @Bind(R.id.tv_yujing)
+    @BindView(R.id.tv_yujing)
     TextView m_tvYujing;
-    @Bind(R.id.tv_guzhang)
+    @BindView(R.id.tv_guzhang)
     TextView m_tvGuzhang;
-    @Bind(R.id.tv_wode)
+    @BindView(R.id.tv_wode)
     TextView m_tvWode;
     ViewPAdapter mVPAdapter;
 

@@ -10,10 +10,11 @@ import com.zihuan.app.model.UserEntity;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
+
 
 public class EmptyAdapter extends XrecyclerAdapter {
-    @Bind(R.id.tv_name)
+    @BindView(R.id.tv_name)
     TextView mtvFile;
     private List<UserEntity> mList = new ArrayList();
 

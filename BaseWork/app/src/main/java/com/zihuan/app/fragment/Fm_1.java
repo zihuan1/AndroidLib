@@ -6,7 +6,6 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.view.View;
-import android.widget.TextView;
 
 import com.github.dfqin.grantor.PermissionListener;
 import com.github.dfqin.grantor.PermissionsUtil;
@@ -14,7 +13,6 @@ import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.zihuan.app.R;
 import com.zihuan.app.adapter.EmptyAdapter;
 import com.zihuan.app.model.UserEntity;
-import com.zihuan.app.u.Logger;
 import com.zihuan.app.u.U;
 import com.zihuan.app.xrv.ViewOnItemClick;
 import com.zihuan.app.xrv.ViewOnItemLongClick;
@@ -22,21 +20,14 @@ import com.zihuan.app.xrv.ViewOnItemLongClick;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.Scheduler;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
+import butterknife.BindView;
 
 /**
  */
 public class Fm_1 extends BaseFragment implements ViewOnItemClick, ViewOnItemLongClick {
 
 
-    @Bind(R.id.xView)
+    @BindView(R.id.xView)
     XRecyclerView xView;
     EmptyAdapter mAdapter;
     List<UserEntity> mList = new ArrayList<>();
@@ -108,17 +99,16 @@ public class Fm_1 extends BaseFragment implements ViewOnItemClick, ViewOnItemLon
                 }
                 mAdapter.updata(mList);
                 xView.loadMoreComplete();
-//                xView.setNoMore(true);
             }
         });
-        Observable.create((ObservableOnSubscribe<String>) emitter -> {
-            UserEntity entity = new UserEntity();
-            entity.setUserName("明明如月");
-            emitter.onNext(mActivity.getDataBase().getUserDao().addUser(entity) + "");
-        })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(integer -> Logger.tag("条数 " + integer));
+//        Observable.create((ObservableOnSubscribe<String>) emitter -> {
+//            UserEntity entity = new UserEntity();
+//            entity.setUserName("明明如月");
+//            emitter.onNext(mActivity.getDataBase().getUserDao().addUser(entity) + "");
+//        })
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(integer -> Logger.tag("条数 " + integer));
     }
 
     @Override
