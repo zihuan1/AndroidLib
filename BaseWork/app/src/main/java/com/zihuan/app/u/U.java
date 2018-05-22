@@ -1,15 +1,10 @@
 package com.zihuan.app.u;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -19,32 +14,22 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.hardware.Camera;
 import android.media.ExifInterface;
-import android.media.MediaScannerConnection;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.Build;
-import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.Message;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Base64;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.Surface;
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.BaseAdapter;
-import android.widget.EditText;
-import android.widget.GridView;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.zihuan.app.MainApplication;
@@ -53,46 +38,23 @@ import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.StreamCorruptedException;
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.net.URLDecoder;
 import java.security.MessageDigest;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class U {
-    public static final String MESSAGE_RECEIVED_ACTION = "com.bu.yuyan.MESSAGE_RECEIVED_ACTION";
-    public static Boolean ExploreFirstAppear = true;
-    public final static int CAMERA = 1;
-    public final static int PHOTO_ALBUM = 2;
-    public final static int PHOTO_REQUEST_CUT = 3;
-    public final static int PHOTO_SAVE = 4;
-    public final static int NO = 1000;
-    public final static int COMMIT = 1001;
-    public final static int EDIT = 1002;
-    public final static int LOCATION = 1003;
-    public final static int MEDIA_MAX_DURATION = 100;
-    public final static int MEDIA_CURRENT_DURATION = 101;
-    public final static int MEDIA_FINSHED = 102;
-    public final static int SHOW_PROGRESS = 103;
-    public final static int RECORDER_STOP = 104;
-    public final static int TIME_DECREASE = 105;
-    public final static String STOP_OTHERS = "com.bu.yuyan.stopother";
-    public final static int STATUS_IS_LOADING = 800;
-    public final static int STATUS_IS_SUCCEEDED = 801;
-    public final static int STATUS_IS_FAILED = 802;
-    public final static int SCAN_EAN_CODE = 10000;
     private static Toast mToast;
 
     // 隐藏键盘
@@ -100,17 +62,6 @@ public class U {
         InputMethodManager imm = (InputMethodManager)
                 context.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
-
-
-    public static void sendMessage(Handler handler, int what, String key,
-                                   String value) {
-        Bundle buddle = new Bundle();
-        buddle.putString(key, value);
-        Message msg = new Message();
-        msg.what = what;
-        msg.setData(buddle);
-        handler.sendMessage(msg);
     }
 
     //把dp转换成px
@@ -125,14 +76,10 @@ public class U {
         return (int) (pxValue / scale + 0.5f);
     }
 
-    public static String getPackageName() {
-        return "com.bu.yuyan";
-    }
-
 
     public static void savePreferences(String key, boolean value) {
         SharedPreferences sharedPreferences = PreferenceManager
-                .getDefaultSharedPreferences(MainApplication.getInstance() );
+                .getDefaultSharedPreferences(MainApplication.getInstance());
         Editor editor = sharedPreferences.edit();
         editor.putBoolean(key, value);
         editor.commit();
@@ -140,7 +87,7 @@ public class U {
 
     //    存储集合
     public static boolean putHashMap(String key, HashMap<String, Integer> hashmap) {
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainApplication.getInstance() );
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainApplication.getInstance());
         Editor editor = settings.edit();
         try {
             String liststr = SceneList2String(hashmap);
@@ -152,7 +99,7 @@ public class U {
     }
 
     public static HashMap<String, Integer> getHashMap(String key) {
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainApplication.getInstance() );
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainApplication.getInstance());
         String liststr = settings.getString(key, "");
         try {
             return String2SceneList(liststr);
@@ -197,7 +144,7 @@ public class U {
     public static void savePreferences(String key, String value) {
 
         SharedPreferences sharedPreferences = PreferenceManager
-                .getDefaultSharedPreferences(MainApplication.getInstance() );
+                .getDefaultSharedPreferences(MainApplication.getInstance());
         Editor editor = sharedPreferences.edit();
         editor.putString(key, value);
         editor.commit();
@@ -208,7 +155,7 @@ public class U {
     public static void savePreferences(String key, int value) {
 
         SharedPreferences sharedPreferences = PreferenceManager
-                .getDefaultSharedPreferences(MainApplication.getInstance() );
+                .getDefaultSharedPreferences(MainApplication.getInstance());
         Editor editor = sharedPreferences.edit();
         editor.putInt(key, value);
         editor.commit();
@@ -218,7 +165,7 @@ public class U {
     public static void savePreferences(String key, float value) {
 
         SharedPreferences sharedPreferences = PreferenceManager
-                .getDefaultSharedPreferences(MainApplication.getInstance() );
+                .getDefaultSharedPreferences(MainApplication.getInstance());
         Editor editor = sharedPreferences.edit();
         editor.putFloat(key, value);
         editor.commit();
@@ -228,7 +175,7 @@ public class U {
     public static void savePreferences(String key, long value) {
 
         SharedPreferences sharedPreferences = PreferenceManager
-                .getDefaultSharedPreferences(MainApplication.getInstance() );
+                .getDefaultSharedPreferences(MainApplication.getInstance());
         Editor editor = sharedPreferences.edit();
         editor.putLong(key, value);
         editor.commit();
@@ -239,7 +186,7 @@ public class U {
     public static void clearPreferences() {
 
         SharedPreferences sharedPreferences = PreferenceManager
-                .getDefaultSharedPreferences(MainApplication.getInstance() );
+                .getDefaultSharedPreferences(MainApplication.getInstance());
         Editor editor = sharedPreferences.edit();
 //        editor.putLong(key, value);
         editor.clear();
@@ -249,160 +196,66 @@ public class U {
 
     public static boolean getPreferences(String key, boolean value) {
         SharedPreferences sharedPreferences = PreferenceManager
-                .getDefaultSharedPreferences(MainApplication.getInstance() );
+                .getDefaultSharedPreferences(MainApplication.getInstance());
         boolean pValue = sharedPreferences.getBoolean(key, value);
         return pValue;
     }
 
     public static String getPreferences(String key, String value) {
         SharedPreferences sharedPreferences = PreferenceManager
-                .getDefaultSharedPreferences(MainApplication.getInstance() );
+                .getDefaultSharedPreferences(MainApplication.getInstance());
         String pValue = sharedPreferences.getString(key, value);
         return pValue;
     }
 
     public static int getPreferences(String key, int value) {
         SharedPreferences sharedPreferences = PreferenceManager
-                .getDefaultSharedPreferences(MainApplication.getInstance() );
+                .getDefaultSharedPreferences(MainApplication.getInstance());
         int pValue = sharedPreferences.getInt(key, value);
         return pValue;
     }
 
     public static float getPreferences(String key, float value) {
         SharedPreferences sharedPreferences = PreferenceManager
-                .getDefaultSharedPreferences(MainApplication.getInstance() );
+                .getDefaultSharedPreferences(MainApplication.getInstance());
         float pValue = sharedPreferences.getFloat(key, value);
         return pValue;
     }
 
     public static long getPreferences(String key, long value) {
         SharedPreferences sharedPreferences = PreferenceManager
-                .getDefaultSharedPreferences(MainApplication.getInstance() );
+                .getDefaultSharedPreferences(MainApplication.getInstance());
         long pValue = sharedPreferences.getLong(key, value);
         return pValue;
     }
 
-
-    public static TranslateAnimation TranslateView(final View argView,
-                                                   final float pX1, final float pX2, final float pY1, final float pY2,
-                                                   long duration, long delay) {
-
-        int left = argView.getLeft() + (int) pX2;
-        int top = argView.getTop() + (int) pY2;
-        int width = argView.getWidth();
-        int height = argView.getHeight();
-        argView.layout(left, top, left + width, top + height);
-        TranslateAnimation animation = new TranslateAnimation(pX1 - pX2, pX1,
-                pY1 - pY2, pY1);
-        animation.setDuration((long) duration);
-        animation.setStartOffset((long) delay);
-
-        return animation;
-    }
-
-    public static Float getDesignScale(Context argContext) {
-        SharedPreferences mySharedPreferences = argContext
-                .getSharedPreferences("screen", Context.MODE_PRIVATE);
-        int iHeight = mySharedPreferences.getInt("height", 0);
-        float scale = 0;
-        DisplayMetrics metric = new DisplayMetrics();
-        ((Activity) argContext).getWindowManager().getDefaultDisplay()
-                .getMetrics(metric);
-        float density = metric.densityDpi;
-        if (density < 160) {
-            scale = iHeight / 600.0f;
+    //sha1 加密
+    public static String getSha1(String str) {
+        if (str == null || str.length() == 0) {
+            return null;
         }
-        if (density >= 160 && density < 240) {
-            scale = iHeight / 800.0f;
-        }
-        if (density >= 240) {
-            scale = iHeight / 1080.0f;
-        }
-//		Log.i("tag", density + "density");
-        return scale;
-    }
+        char hexDigits[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+                'a', 'b', 'c', 'd', 'e', 'f'};
+        try {
+            MessageDigest mdTemp = MessageDigest.getInstance("SHA1");
+            mdTemp.update(str.getBytes("UTF-8"));
 
-    /**
-     * 根据资源id 得到 Bitmap 图片
-     *
-     * @param context
-     * @param resId   资源id
-     * @return
-     */
-    public static Bitmap readBitmap(Context context, int resId) {
-        BitmapFactory.Options opt = new BitmapFactory.Options();
-        opt.inPreferredConfig = Bitmap.Config.RGB_565;
-        opt.inPurgeable = true;
-        opt.inInputShareable = true;
-        opt.inSampleSize = 1;
-        // 获取资源图片
-        InputStream is = context.getResources().openRawResource(resId);
-        return BitmapFactory.decodeStream(is, null, opt);
-    }
-
-    /**
-     * 缩放图片
-     *
-     * @param bitmap
-     * @param width
-     * @param height
-     * @return
-     */
-    public static Bitmap zoomBitmap(Bitmap bitmap, float width, float height) {
-        int w = bitmap.getWidth();
-        int h = bitmap.getHeight();
-        Matrix matrix = new Matrix();
-        float scaleWidth = ((float) width / w);
-        float scaleHeight = ((float) height / h);
-        matrix.postScale(scaleWidth, scaleHeight);// 利用矩阵进行缩放不会造成内存溢出
-        Bitmap newbmp = Bitmap.createBitmap(bitmap, 0, 0, w, h, matrix, true);
-        return newbmp;
-    }
-
-    public static Bitmap GetProperBitmap(Context argContext, int argResId) {
-        // We first get the raw bitmap with the original pixel size
-        Bitmap rawBitmap = readBitmap(argContext, argResId);
-        // Then we calculate the scaled bitmap pixel size according to the
-        // device resolution
-        float fWidth = rawBitmap.getWidth() * getDesignScale(argContext);
-        float fHeight = rawBitmap.getHeight() * getDesignScale(argContext);
-        Bitmap finalBitmap = zoomBitmap(rawBitmap, fWidth, fHeight);
-        return finalBitmap;
-    }
-
-
-//    public static String ToSBC(String input) {
-//        // 半角转全角：
-//        char[] c = input.toCharArray();
-//        for (int i = 0; i < c.length; i++) {
-//            if (c[i] == 32) {
-//                c[i] = (char) 12288;
-//                continue;
-//            }
-//            if (c[i] < 127)
-//                c[i] = (char) (c[i] + 65248);
-//        }
-//        return new String(c);
-//    }
-
-    /**
-     * 全角转换为半角
-     *
-     * @param input
-     * @return
-     */
-    public static String ToDBC(String input) {
-        char[] c = input.toCharArray();
-        for (int i = 0; i < c.length; i++) {
-            if (c[i] == 12288) {
-                c[i] = (char) 32;
-                continue;
+            byte[] md = mdTemp.digest();
+            int j = md.length;
+            char buf[] = new char[j * 2];
+            int k = 0;
+            for (int i = 0; i < j; i++) {
+                byte byte0 = md[i];
+                buf[k++] = hexDigits[byte0 >>> 4 & 0xf];
+                buf[k++] = hexDigits[byte0 & 0xf];
             }
-            if (c[i] > 65280 && c[i] < 65375)
-                c[i] = (char) (c[i] - 65248);
+            return new String(buf);
+        } catch (Exception e) {
+            // TODO: handle exception
+            return null;
         }
-        return new String(c);
     }
+
 
     /**
      * 去除特殊字符或将所有中文标号替换为英文标号
@@ -481,40 +334,8 @@ public class U {
         Canvas canvas = new Canvas(bm1);
         canvas.drawBitmap(bm, m, paint);
         canvas.save();
-
         return bm1;
 
-    }
-
-    public static int setCameraDisplayOrientation(Activity activity, int cameraId, Camera camera) {
-        Camera.CameraInfo info = new Camera.CameraInfo();
-        Camera.getCameraInfo(cameraId, info);
-        int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
-        int degrees = 0;
-        switch (rotation) {
-            case Surface.ROTATION_0:
-                degrees = 0;
-                break;
-            case Surface.ROTATION_90:
-                degrees = 90;
-                break;
-            case Surface.ROTATION_180:
-                degrees = 180;
-                break;
-            case Surface.ROTATION_270:
-                degrees = 270;
-                break;
-        }
-        int result;
-        if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-            result = (info.orientation + degrees) % 360;
-            result = (360 - result) % 360;   // compensate the mirror
-        } else {
-            // back-facing
-            result = (info.orientation - degrees + 360) % 360;
-        }
-        camera.setDisplayOrientation(result);
-        return result;
     }
 
     /**
@@ -588,46 +409,6 @@ public class U {
         }
     }
 
-    public static void blurFractional(int[] in, int[] out, int width, int height, float radius) {
-        radius -= (int) radius;
-        float f = 1.0f / (1 + 2 * radius);
-        int inIndex = 0;
-        for (int y = 0; y < height; y++) {
-            int outIndex = y;
-            out[outIndex] = in[0];
-            outIndex += height;
-            for (int x = 1; x < width - 1; x++) {
-                int i = inIndex + x;
-                int rgb1 = in[i - 1];
-                int rgb2 = in[i];
-                int rgb3 = in[i + 1];
-                int a1 = (rgb1 >> 24) & 0xff;
-                int r1 = (rgb1 >> 16) & 0xff;
-                int g1 = (rgb1 >> 8) & 0xff;
-                int b1 = rgb1 & 0xff;
-                int a2 = (rgb2 >> 24) & 0xff;
-                int r2 = (rgb2 >> 16) & 0xff;
-                int g2 = (rgb2 >> 8) & 0xff;
-                int b2 = rgb2 & 0xff;
-                int a3 = (rgb3 >> 24) & 0xff;
-                int r3 = (rgb3 >> 16) & 0xff;
-                int g3 = (rgb3 >> 8) & 0xff;
-                int b3 = rgb3 & 0xff;
-                a1 = a2 + (int) ((a1 + a3) * radius);
-                r1 = r2 + (int) ((r1 + r3) * radius);
-                g1 = g2 + (int) ((g1 + g3) * radius);
-                b1 = b2 + (int) ((b1 + b3) * radius);
-                a1 *= f;
-                r1 *= f;
-                g1 *= f;
-                b1 *= f;
-                out[outIndex] = (a1 << 24) | (r1 << 16) | (g1 << 8) | b1;
-                outIndex += height;
-            }
-            out[outIndex] = in[width - 1];
-            inIndex += width;
-        }
-    }
 
     public static int clamp(int x, int a, int b) {
         return (x < a) ? a : (x > b) ? b : x;
@@ -640,7 +421,7 @@ public class U {
      * @param argText
      */
     public static void ShowToast(final String argText) {
-        U.ShowToast(MainApplication.getInstance() , argText);
+        U.ShowToast(MainApplication.getInstance(), argText);
     }
 
     /**
@@ -669,95 +450,116 @@ public class U {
     }
 
 
-    public static boolean isAppOnForeground() {
-        // Returns a list of application processes that are running on the device
-        ActivityManager activityManager = (ActivityManager) MainApplication.getInstance() .getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager.getRunningAppProcesses();
-        if (appProcesses == null) return false;
-
-        for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) {
-            // The name of the process that this object is associated with.
-            if (appProcess.processName.equals(U.getPackageName())
-                    && appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-
     /**
      * 保存图片到SD卡
      *
      * @param bitmap      保存的图片
      * @param argFileName
-     * @param quality     保存的质量
-     * @param fScale
+     * @param quality     保存的质量（1-100）
+     * @param fScale      压缩比率 1为原图
      */
-    public static void saveBitmapToSD(Bitmap bitmap, String argFileName, int quality, float fScale) {
-        File pFileDir = new File("/sdcard/Hworks/");
-        File pFilePath = new File("/sdcard/Hworks/", argFileName);
-        if (pFilePath.exists()) {
-            pFilePath.delete();
-        }
+    public static String saveBitmapToSD(Bitmap bitmap, String path, String argFileName, int quality, float fScale) {
+        File pFileDir = new File(Environment.getExternalStorageDirectory(), path);
+        String url = "";
+        File pFilePath = new File(pFileDir, argFileName);
         if (!pFileDir.exists()) {
             pFileDir.mkdirs();//如果路径不存在就先创建路径
         }
         try {
             FileOutputStream out = new FileOutputStream(pFilePath);
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            Bitmap newBitmap = U.compressImage(bitmap, fScale);
-            newBitmap.compress(Bitmap.CompressFormat.JPEG, quality, baos);
-
             BufferedOutputStream stream = new BufferedOutputStream(out);
-            stream.write(baos.toByteArray());
-            baos.close();
-            stream.close();
+            Bitmap newBitmap;
+            if (fScale == 1) {
+                newBitmap = bitmap;
+            } else {
+                newBitmap = U.compressImage(bitmap, fScale);
+            }
+            newBitmap.compress(Bitmap.CompressFormat.JPEG, quality, stream);
+            url = pFilePath.getAbsolutePath();
             out.close();
+            stream.flush();//输出
+            stream.close();//关闭
+            newBitmap.recycle();
+            newBitmap = null;
+            Logger.tag("保存成功" + pFilePath.getAbsolutePath());
+//            检测图片是否被旋转
+            int arg = readPictureDegree(url);
+            if (arg == 0) {
+                bitmap = null;
+                return url;
+            } else {
+//                修复旋转重新保存
+                saveBitmapToSD(rotaingImageView(arg, bitmap), path, argFileName, quality, fScale);
+            }
 
-            Log.e("lt00", "width" + bitmap.getWidth());
-            Log.e("lt00", "height" + bitmap.getHeight());
-
-            Log.e("lt", "保存成功");
-            Log.e("lt", pFilePath.getAbsolutePath());
-        } catch (FileNotFoundException e) {
-            Log.e("j.zhou", "保存失败");
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            Log.e("j.zhou", "保存失败");
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        } catch (Exception e) {
+            Logger.tag("保存失败" + e.toString());
+//            e.printStackTrace();
         }
+        return url;
     }
 
-    public static void saveBitmapToFile(Bitmap bitmap, String _file)
-            throws IOException {
-        BufferedOutputStream os = null;
+    public static String saveBitmapToSD2(Bitmap bitmap, String path, String argFileName) {
+        File pFileDir = new File(Environment.getExternalStorageDirectory(), path);
+        String url = "";
+        File pFilePath = new File(pFileDir, argFileName);
+        if (!pFileDir.exists()) {
+            pFileDir.mkdirs();//如果路径不存在就先创建路径
+        }
         try {
-            File file = new File(_file);
-            // String _filePath_file.replace(File.separatorChar +
-            // file.getName(), "");
-            int end = _file.lastIndexOf(File.separator);
-            String _filePath = _file.substring(0, end);
-            File filePath = new File(_filePath);
-            if (!filePath.exists()) {
-                filePath.mkdirs();
-            }
-            file.createNewFile();
-            os = new BufferedOutputStream(new FileOutputStream(file));
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, os);
-        } finally {
-            if (os != null) {
-                try {
-                    os.close();
-                } catch (IOException e) {
-                    Log.e("lt", e.getMessage(), e);
-                }
+            FileOutputStream out = new FileOutputStream(pFilePath);
+            BufferedOutputStream stream = new BufferedOutputStream(out);
+            Bitmap newBitmap;
+            newBitmap = compressImage(bitmap);
+            newBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+            url = pFilePath.getAbsolutePath();
+            out.close();
+            stream.flush();//输出
+            stream.close();//关闭
+            newBitmap.recycle();
+            newBitmap = null;
+            Logger.tag("保存成功" + pFilePath.getAbsolutePath());
+            bitmap = null;
+            return url;
+        } catch (Exception e) {
+            Logger.tag("保存失败" + e.toString());
+//            e.printStackTrace();
+        }
+        return url;
+    }
+
+    /**
+     * 压缩图片
+     *
+     * @param bitmap
+     * @return
+     */
+    public static Bitmap compressImage(Bitmap bitmap) {
+        //图片宽高
+        int w = bitmap.getWidth();
+        int h = bitmap.getHeight();
+        //宽高缩放比例
+        double sw = w * 1.0 / 416;
+        double sh = h * 1.0 / 416;
+        Matrix matrix = new Matrix();
+        if (Math.max(sw, sh) < 1) {
+            matrix.postScale(416f / w, 416f / h);
+            bitmap = Bitmap.createBitmap(bitmap, 0, 0, w, h, matrix, true);
+        } else if (Math.min(sw, sh) >= 1) {
+            matrix.postScale(416f / w, 416f / h);
+            bitmap = Bitmap.createBitmap(bitmap, 0, 0, w, h, matrix, true);
+        } else if (Math.min(sw, sh) < 1 && Math.max(sw, sh) >= 1) {
+            if (sw > sh) {
+                matrix.postScale(1, 416f / h);
+                bitmap = Bitmap.createBitmap(bitmap, 0, 0, 416, h, matrix, true);
+            } else {
+                matrix.postScale(416f / w, 1);
+                bitmap = Bitmap.createBitmap(bitmap, 0, 0, w, 416, matrix, true);
             }
         }
+        return bitmap;
     }
+
 
     /**
      * 从相册拿到没有经过旋转的图片
@@ -771,7 +573,7 @@ public class U {
 
         // 不管是拍照还是选择图片每张图片都有在数据中存储也存储有对应旋转角度orientation值
         // 所以我们在取出图片是把角度值取出以便能正确的显示图片,没有旋转时的效果观看
-        ContentResolver cr = MainApplication.getInstance() .getContentResolver();
+        ContentResolver cr = MainApplication.getInstance().getContentResolver();
         Cursor cursor = cr.query(mImageCaptureUri, null, null, null, null);// 根据Uri从数据库中找
         if (cursor != null) {
             Log.e("----", "11111111" + mImageCaptureUri);
@@ -818,7 +620,7 @@ public class U {
                 Bitmap bitmap = null;
 
                 //外界的程序访问ContentProvider所提供数据 可以通过ContentResolver接口
-                ContentResolver resolver = MainApplication.getInstance() .getContentResolver();
+                ContentResolver resolver = MainApplication.getInstance().getContentResolver();
 
                 try {
                     bitmap = MediaStore.Images.Media.getBitmap(resolver, mImageCaptureUri);        //显得到bitmap图片
@@ -837,60 +639,11 @@ public class U {
     }
 
 
-    //    public static void saveBitmap(byte[]  argImageBytes,String argFileName) {
-//        Bitmap bm = Bytes2Bimap(argImageBytes);
-//        savePicture(bm,argFileName);
-//    }
     /*
-    * 保存头像方法
-    */
-    public static void saveBitmap(Uri argPhotoFileUri, Activity argActivity, String argFileName, int quality, float fScale) {
-        Log.i("---", "保存图片");
-        String strFilePath = U.getRealPathFromURI(argPhotoFileUri, argActivity);
-
-        Bitmap bm = getBitmap(strFilePath);
-
-        Log.i("---", bm.getHeight() + "");
-
-        saveBitmapToSD(bm, argFileName, quality, fScale);
-    }
-
-
-    public static Bitmap Bytes2Bimap(byte[] b) {
-        if (b.length != 0) {
-            return BitmapFactory.decodeByteArray(b, 0, b.length);
-        } else {
-            return null;
-        }
-    }
-
-    /*
-    * 获取头像的bitmap
-    * param path, bitmap的所在路径
-    * return 打开的bitmap
-    * */
-    private static Bitmap getBitmap(String path) {
-
-        try {
-            //先解析图片边框的大小
-            BitmapFactory.Options ops = new BitmapFactory.Options();
-            ops.inJustDecodeBounds = true;
-            Bitmap bm = BitmapFactory.decodeFile(path, ops);
-            ops.inSampleSize = 1;
-            ops.inJustDecodeBounds = false;
-            bm = BitmapFactory.decodeFile(path, ops);
-            return bm;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    /*
-    * 获取Uri的实际路径
-    * pragma contentUri, 文件的uri
-    * return 文件存放的真实path
-    * */
+     * 获取Uri的实际路径
+     * pragma contentUri, 文件的uri
+     * return 文件存放的真实path
+     * */
     public static String getRealPathFromURI(Uri contentUri, Activity argActivity) {
         String[] proj = {MediaStore.Images.Media.DATA};
         Cursor cursor = argActivity.managedQuery(contentUri, proj, null, null, null);
@@ -901,10 +654,10 @@ public class U {
     }
 
     /*
-    * 将字符串进行md5加密
-    * pragma argString, 明文
-    * return 经过md5加密后的密文
-    * */
+     * 将字符串进行md5加密
+     * pragma argString, 明文
+     * return 经过md5加密后的密文
+     * */
     public final static String MD5(String argString) {
         char hexDigits[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
         try {
@@ -962,60 +715,6 @@ public class U {
         }
     }
 
-    public static String NowString() {
-        SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");//设置日期格式
-        return df.format(new Date());// new Date()为获取当前系统时间
-    }
-
-
-    /**
-     * 裁切图片 确定的宽和高
-     */
-    public static Bitmap ImageCrop1(Bitmap bitmap) {
-        if (bitmap == null) {
-            return bitmap;
-        }
-        int w = bitmap.getWidth(); // 得到图片的宽，高
-        int h = bitmap.getHeight();
-
-        int retX = 0;
-        int retY = 0;
-        int newWidth = w;
-        int newHeight = h;
-
-        newWidth = 600;
-        newHeight = h;
-        //下面这句是关键
-        return Bitmap.createBitmap(bitmap, retX, retY, newWidth, newHeight, null, false);
-    }
-
-    /**
-     * 剪切3:4图片
-     */
-    public static Bitmap cropImage3to4(Bitmap bitmap) {
-        if (bitmap == null) {
-            return bitmap;
-        }
-        int w = bitmap.getWidth(); // 得到图片的宽，高
-        int h = bitmap.getHeight();
-
-        int retX = 0;
-        int retY = 0;
-        int newWidth = w;
-        int newHeight = (int) (w * 4 / 3.0f);
-        if (w >= h) {
-            retX = (int) ((w - h * 3.0f / 4) / 2);
-            retY = 0;
-            newWidth = (int) (h * 3.0f / 4);
-            newHeight = h;
-        }
-
-        //下面这句是关键
-        Bitmap pResultBitmap = Bitmap.createBitmap(bitmap, retX, retY, newWidth, newHeight, null, false);
-
-        return pResultBitmap;
-    }
-
     /**
      * 剪切1:1图片
      */
@@ -1043,10 +742,10 @@ public class U {
     }
 
     /*
-      * 压缩图片到原大小的scale倍 (100)
-      * @param argBitmap 原图片
-      * @return 压缩后的图片
-      * */
+     * 压缩图片到原大小的scale倍 (100)
+     * @param argBitmap 原图片
+     * @return 压缩后的图片
+     * */
     public static Bitmap compressImage(Bitmap argBitmap, float fScale) {
 
         /// 图片源
@@ -1084,7 +783,7 @@ public class U {
         List<Integer> albumList = getPhotoAlbum();
         if (albumList != null && albumList.size() > 0) {
             /** 通过ID 获取缩略图*/
-            Bitmap thumbBitmap = MediaStore.Images.Thumbnails.getThumbnail(MainApplication.getInstance() .getContentResolver(), albumList.get(0), MediaStore.Images.Thumbnails.MICRO_KIND, null);
+            Bitmap thumbBitmap = MediaStore.Images.Thumbnails.getThumbnail(MainApplication.getInstance().getContentResolver(), albumList.get(0), MediaStore.Images.Thumbnails.MICRO_KIND, null);
             return thumbBitmap;
         }
         return null;
@@ -1109,9 +808,9 @@ public class U {
      *
      * @return
      */
-    private static List<Integer> getPhotoAlbum() {
+    public static List<Integer> getPhotoAlbum() {
         List<Integer> aibumList = new ArrayList<Integer>();
-        Cursor cursor = MediaStore.Images.Media.query(MainApplication.getInstance() .getContentResolver(),
+        Cursor cursor = MediaStore.Images.Media.query(MainApplication.getInstance().getContentResolver(),
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI, STORE_IMAGES);
         while (cursor.moveToNext()) {
             String id = cursor.getString(3);
@@ -1249,11 +948,11 @@ public class U {
         int deltaY = source.getHeight() - targetHeight;
         if (!scaleUp && (deltaX < 0 || deltaY < 0)) {
             /*
-            * In this case the bitmap is smaller, at least in one dimension,
-            * than the target.  Transform it by placing as much of the image
-            * as possible into the target and leaving the top/bottom or
-            * left/right (or both) black.
-            */
+             * In this case the bitmap is smaller, at least in one dimension,
+             * than the target.  Transform it by placing as much of the image
+             * as possible into the target and leaving the top/bottom or
+             * left/right (or both) black.
+             */
             Bitmap b2 = Bitmap.createBitmap(targetWidth, targetHeight,
                     Bitmap.Config.ARGB_8888);
             Canvas c = new Canvas(b2);
@@ -1334,132 +1033,12 @@ public class U {
     }
 
     /**
-     * 保存bitmap 到系统相册
-     */
-    public static void saveBitmapToAlbum(Bitmap bm, File fileName) {
-
-        String mediaStorageDir = Environment
-                .getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + File.separator + "Camera";
-
-        Log.e("---", "mediaStorageDir=" + mediaStorageDir);
-        File forderPath = new File(mediaStorageDir);
-        if (forderPath.exists() == false) {
-            try {
-                forderPath.mkdirs();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        File file = new File(mediaStorageDir + File.separator + fileName);
-
-        if (file.exists() == false) {
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        BufferedOutputStream bos = null;
-        try {
-            bos = new BufferedOutputStream(new FileOutputStream(file));
-            bm.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-            bos.flush();
-            MediaScannerConnection.scanFile(MainApplication.getInstance() ,
-                    new String[]{
-                            file.toString()
-                    }, null,
-                    new MediaScannerConnection.OnScanCompletedListener() {
-                        @Override
-                        public void onScanCompleted(final String path, final Uri uri) {
-                            Log.e("---", "path=" + path);
-                        }
-                    });
-
-            //bmp.recycle();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (bos != null)
-                try {
-                    bos.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-        }
-        //这个方法也可以 但小米不太试用
-        //  MediaStore.Images.Media.insertImage(getContentResolver(), bm, fileName, "paipaijing");
-        try {
-            MainApplication.getInstance() .sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://" + Environment.getExternalStorageDirectory())));
-        } catch (Exception e) {
-        }
-
-    }
-
-
-    /**
-     * ListView 记住position加载时不从头加载
-     */
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public static void SetAdapter(final ListView argListView, final BaseAdapter argAdapter) {
-        argAdapter.notifyDataSetChanged();
-        new Handler().post(new Runnable() {
-            @Override
-            public void run() {
-                int position = argListView.getFirstVisiblePosition();
-                View v = argListView.getChildAt(0);
-                int top = (v == null) ? 0 : v.getTop();
-                if (argListView.getAdapter() == null) {
-                    argListView.setAdapter(argAdapter);
-                }
-                // argAdapter.notifyDataSetChanged();
-                argListView.setSelectionFromTop(position, top);
-            }
-        });
-    }
-
-    /**
-     * ListView 记住position加载时不从头加载
-     */
-    public static void SetGridViewAdapter(final GridView argGridView, final BaseAdapter argAdapter) {
-        argAdapter.notifyDataSetChanged();
-        new Handler().post(new Runnable() {
-            @Override
-            public void run() {
-                int position = argGridView.getFirstVisiblePosition();
-                View v = argGridView.getChildAt(0);
-                int top = (v == null) ? 0 : v.getTop();
-                if (argGridView.getAdapter() == null) {
-                    argGridView.setAdapter(argAdapter);
-                }
-                // argAdapter.notifyDataSetChanged();
-                argGridView.setSelection(top);
-            }
-        });
-    }
-
-    /*将字符串转为时间戳,传入对应的格式*/
-    public static long getStringToDate(String time) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
-        Date date = new Date();
-        try {
-            date = sdf.parse(time);
-        } catch (java.text.ParseException e) {
-            e.printStackTrace();
-        }
-        return date.getTime();
-    }
-
-    /**
      * 判断网络状态
      *
      * @return
      */
     public static boolean CheckNetworkConnected() {
-        if (MainApplication.getInstance()  != null) {
+        if (MainApplication.getInstance() != null) {
             ConnectivityManager mConnectivityManager = (ConnectivityManager) MainApplication.getInstance()
                     .getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
@@ -1468,17 +1047,6 @@ public class U {
             }
         }
         return false;
-    }
-
-
-    /**
-     * 隐藏软键盘
-     */
-    public static void hideSoftKeyboard(EditText argEditText) {
-
-        InputMethodManager imm = (InputMethodManager) MainApplication.getInstance() .getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(argEditText.getWindowToken(), 0);
-        // imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
     public static String uRLDecoder(String str) {
@@ -1492,9 +1060,6 @@ public class U {
         }
         return "";
     }
-
-    // 退出时间
-    private static long currentBackPressedTime = 0;
 
 
     /**
@@ -1513,18 +1078,17 @@ public class U {
 
 
     //    压缩图片
-    public static Bitmap decodeScaledBitmapFromSdCard(String filePath, int reqWidth, int reqHeight) {
+    public static Bitmap ScaledBitmap(String filePath, int reqWidth, int reqHeight) {
 
-        // First decode with inJustDecodeBounds=true to check dimensions
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(filePath, options);
-
         Logger.tag("长度" + options.outHeight);
         Logger.tag("宽度" + options.outWidth);
+//        options.outHeight = reqHeight;
+//        options.outWidth = reqWidth;
         // Calculate inSampleSize
         options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
-
         // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;
         return BitmapFactory.decodeFile(filePath, options);
@@ -1552,20 +1116,10 @@ public class U {
         return inSampleSize;
     }
 
-    public static Bitmap toturn(Bitmap img) {
-        Matrix matrix = new Matrix();
-        matrix.postRotate(90); /*翻转90度*/
-        int width = img.getWidth();
-        int height = img.getHeight();
-        img = Bitmap.createBitmap(img, 0, 0, width, height, matrix, true);
-        return img;
-    }
-
     // 截取字符串最后一位
     public static String getStr(String tid) {
         return tid.substring(0, tid.length() - 1);
     }
-
 
 
     public static String strMi(int distance) {
@@ -1590,52 +1144,96 @@ public class U {
         return new String(Base64.encode(m.getBytes(), Base64.DEFAULT));
     }
 
-    //    性别选择
-    public static String gender(String m) {
-        return m.equals("1") ? "限男生" : "限女生";
+    /**
+     * 模拟点击，点击该View的xy坐标(5,5)
+     *
+     * @param view 模拟点击的View
+     */
+    public static void simulateTouch(View view) {
+        final long downTime = SystemClock.uptimeMillis();
+        int[] ints = new int[2];
+        view.getLocationOnScreen(ints);
+        view.dispatchTouchEvent(MotionEvent.obtain(downTime, downTime, MotionEvent.ACTION_DOWN,
+                ints[0] + 5, ints[1] + 5, 0));
+        view.dispatchTouchEvent(MotionEvent.obtain(downTime, downTime, MotionEvent.ACTION_UP,
+                ints[0] + 5, ints[1] + 5, 0));
+
     }
 
+    /**
+     * 处理旋转后的图片
+     *
+     * @param originpath 原图路径
+     * @return 返回修复完毕后的图片路径
+     */
+    public static Bitmap amendRotatePhoto(String originpath, Bitmap bitmap) {
 
-    public static String getValue(String key) {
-        String jpush_appkey = null;
+        // 取得图片旋转角度
+        int angle = readPictureDegree(originpath);
 
+        // 把原图压缩后得到Bitmap对象
+//        Bitmap bmp = getCompressPhoto(originpath);
+
+        // 修复图片被旋转的角度
+        Bitmap bit = rotaingImageView(angle, bitmap);
+
+        // 保存修复后的图片并返回保存后的图片路径
+        return bit;
+    }
+
+    /**
+     * 旋转图片
+     *
+     * @param angle  被旋转角度
+     * @param bitmap 图片对象
+     * @return 旋转后的图片
+     */
+    public static Bitmap rotaingImageView(int angle, Bitmap bitmap) {
+        Bitmap returnBm = null;
+        // 根据旋转角度，生成旋转矩阵
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
         try {
-            ApplicationInfo appInfo = MainApplication.getInstance().getPackageManager()
-                    .getApplicationInfo(getPackageName(),
-                            PackageManager.GET_META_DATA);
-
-            jpush_appkey = appInfo.metaData.getString(key);
-
-            Logger.tag("jpush_appkey=" + jpush_appkey);
-        } catch (PackageManager.NameNotFoundException e) {
-            Logger.tag("err " + e.toString());
+            // 将原始图片按照旋转矩阵进行旋转，并得到新的图片
+            returnBm = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        } catch (OutOfMemoryError e) {
         }
-        return jpush_appkey;
-    }
-//    分解url
-    public static HashMap<String, String> urlToHashMap(String url) {
-        HashMap<String, String> map = null;
-        if (url != null) {
-            map = new HashMap<>();
-            String[] urls = url.split("\\?");
-            if (urls.length > 1) {
-                map.put("url", urls[0]);
-            }
-            if (urls.length == 2) {
-                String param = urls[1];
-
-                String[] arrTemp = param.split("&");
-                for (String str : arrTemp) {
-                    String[] qs = str.split("=");
-                    if (qs[0]!=null&&qs[1]!=null){
-                        map.put(qs[0], qs[1]);
-                    }
-                }
-            }
-
+        if (returnBm == null) {
+            returnBm = bitmap;
         }
-
-        return map;
+        if (bitmap != returnBm) {
+            bitmap.recycle();
+        }
+        return returnBm;
     }
 
+
+    /**
+     * 获取单个文件的MD5值！
+     *
+     * @param file
+     * @return
+     */
+    public static String getFileMD5(File file) {
+        if (!file.isFile()) {
+            return null;
+        }
+        MessageDigest digest = null;
+        FileInputStream in = null;
+        byte buffer[] = new byte[1024];
+        int len;
+        try {
+            digest = MessageDigest.getInstance("MD5");
+            in = new FileInputStream(file);
+            while ((len = in.read(buffer, 0, 1024)) != -1) {
+                digest.update(buffer, 0, len);
+            }
+            in.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        BigInteger bigInt = new BigInteger(1, digest.digest());
+        return bigInt.toString(16);
+    }
 }

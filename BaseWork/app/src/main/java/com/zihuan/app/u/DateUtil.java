@@ -12,8 +12,6 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by 1bu2bu on 2015/8/19.
- * <p>
  * 日期转换工具类
  */
 public class DateUtil {

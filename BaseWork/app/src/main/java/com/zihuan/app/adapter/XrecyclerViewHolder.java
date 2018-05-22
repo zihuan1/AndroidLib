@@ -8,7 +8,7 @@ import com.zihuan.app.xrv.ViewOnItemLongClick;
 
 
 /**
- * Created by 1bu2bu-4 on 2016/9/1.
+ * Created by zihuan on 2016/9/1.
  */
 public class XrecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 //    public static TextView mTextView;
