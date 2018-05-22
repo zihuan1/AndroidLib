@@ -52,8 +52,11 @@ dependencies {
     implementation 'com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0'
     //    数据库
     implementation 'android.arch.persistence.room:runtime:1.0.0'
+//    导航栏
+    implementation 'me.majiajie:pager-bottom-tab-strip:2.2.5'
     annotationProcessor 'android.arch.persistence.room:compiler:1.0.0'
     annotationProcessor  'com.google.dagger:dagger-compiler:2.16'
+
 }
 configurations.all {
 

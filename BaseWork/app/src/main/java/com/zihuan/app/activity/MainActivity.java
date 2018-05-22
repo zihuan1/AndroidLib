@@ -1,11 +1,12 @@
 package com.zihuan.app.activity;
 
 
+import android.graphics.Color;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.zihuan.app.R;
@@ -20,26 +21,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
+import me.majiajie.pagerbottomtabstrip.NavigationController;
+import me.majiajie.pagerbottomtabstrip.PageNavigationView;
+import me.majiajie.pagerbottomtabstrip.item.BaseTabItem;
+import me.majiajie.pagerbottomtabstrip.item.NormalItemView;
 
 public class MainActivity extends BaseActivity {
 
     @BindView(R.id.vp_main)
     NoScrollViewPager m_vpMain;
-    @BindView(R.id.tv_shebei)
-    TextView m_tvShebei;
-    @BindView(R.id.ll_shebei)
-    LinearLayout m_llShebei;
-    @BindView(R.id.tv_yujing)
-    TextView m_tvYujing;
-    @BindView(R.id.tv_guzhang)
-    TextView m_tvGuzhang;
-    @BindView(R.id.tv_wode)
-    TextView m_tvWode;
     ViewPAdapter mVPAdapter;
+    @BindView(R.id.page_bar)
+    PageNavigationView pageBar;
 
     private int anInt;
-    List<TextView> mViewList = new ArrayList<>();
+    NavigationController mNavigationController;
 
     @Override
     public int getLayoutId() {
@@ -48,10 +46,23 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void initView() {
-        mViewList.add(m_tvShebei);
-        mViewList.add(m_tvYujing);
-        mViewList.add(m_tvGuzhang);
-        mViewList.add(m_tvWode);
+        int color = getResources().getColor(R.color.colorPrimary);
+        int def = getResources().getColor(R.color.color_8888);
+
+        mNavigationController = pageBar.material()
+                .addItem(R.mipmap.ic_launcher, "首页", color)
+                .addItem(R.mipmap.ic_launcher, "第二页", color)
+                .addItem(R.mipmap.ic_launcher, "第三页", color)
+                .addItem(R.mipmap.ic_launcher, "我的", color)
+                .setDefaultColor(def)
+                .build();
+//        mNavigationController = pageBar.custom()
+//                .addItem(newItem(R.mipmap.ic_launcher, "首页", color))
+//                .addItem(newItem(R.mipmap.ic_launcher, "第二页", color))
+//                .addItem(newItem(R.mipmap.ic_launcher, "第三页", color))
+//                .addItem(newItem(R.mipmap.ic_launcher, "我的", color))
+////                .setDefaultColor(def)
+//                .build();
         List<Fragment> fragments = new ArrayList<>();
         Fm_1 fmShebei = new Fm_1();
         Fm_2 fmYijing = new Fm_2();
@@ -63,6 +74,7 @@ public class MainActivity extends BaseActivity {
         fragments.add(fm_Wode);
         mVPAdapter = new ViewPAdapter(getSupportFragmentManager(), fragments);
         m_vpMain.setAdapter(mVPAdapter);
+        mNavigationController.setupWithViewPager(m_vpMain);
 //        预加载3个页面
         m_vpMain.setOffscreenPageLimit(3);
         m_vpMain.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -81,7 +93,6 @@ public class MainActivity extends BaseActivity {
 
             }
         });
-        m_llShebei.performClick();
     }
 
     @Override
@@ -90,29 +101,14 @@ public class MainActivity extends BaseActivity {
     }
 
 
-    @OnClick({R.id.ll_shebei, R.id.ll_yujing, R.id.ll_guzhang, R.id.ll_wode})
-    public void onClick(View view) {
-        for (int i = 0; i < 4; i++) {
-            mViewList.get(i).setSelected(false);
-            mViewList.get(i).setTextColor(getResources().getColorStateList(R.color.color_8888));
-        }
-        switch (view.getId()) {
-            case R.id.ll_shebei:
-                m_vpMain.setCurrentItem(0, false);
-
-                break;
-            case R.id.ll_yujing:
-                m_vpMain.setCurrentItem(1, false);
-                break;
-            case R.id.ll_guzhang:
-                m_vpMain.setCurrentItem(2, false);
-                break;
-
-            case R.id.ll_wode:
-                m_vpMain.setCurrentItem(3, false);
-                break;
-        }
-        mViewList.get(anInt).setSelected(true);
-        mViewList.get(anInt).setTextColor(getResources().getColorStateList(R.color.color_8888));
+    //创建一个Item
+    private BaseTabItem newItem(int drawable, String text, int checkedDrawable) {
+        NormalItemView normalItemView = new NormalItemView(this);
+        normalItemView.initialize(drawable, checkedDrawable, text);
+        normalItemView.setTextDefaultColor(Color.GRAY);
+        normalItemView.setTextCheckedColor(0xFF009688);
+        return normalItemView;
     }
+
+
 }
