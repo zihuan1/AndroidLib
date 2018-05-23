@@ -56,6 +56,8 @@ dependencies {
     implementation 'me.majiajie:pager-bottom-tab-strip:2.2.5'
     annotationProcessor 'android.arch.persistence.room:compiler:1.0.0'
     annotationProcessor  'com.google.dagger:dagger-compiler:2.16'
+    compileOnly 'org.projectlombok:lombok:1.16.20'
+    annotationProcessor 'org.projectlombok:lombok:1.16.20'
 
 }
 configurations.all {

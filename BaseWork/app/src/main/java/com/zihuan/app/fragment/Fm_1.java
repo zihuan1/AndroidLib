@@ -14,6 +14,8 @@ import com.zihuan.app.R;
 import com.zihuan.app.adapter.EmptyAdapter;
 import com.zihuan.app.model.UserEntity;
 import com.zihuan.app.u.U;
+import com.zihuan.app.view.bottom.BaseBottomSheet;
+import com.zihuan.app.view.bottom.BottomSheetView;
 import com.zihuan.app.xrv.ViewOnItemClick;
 import com.zihuan.app.xrv.ViewOnItemLongClick;
 
@@ -114,6 +116,11 @@ public class Fm_1 extends BaseFragment implements ViewOnItemClick, ViewOnItemLon
     @Override
     public void setOnItemClickListener(View view, int postion) {
         U.ShowToast(" 点击 " + postion);
+
+        BottomSheetView.build(mActivity)
+                .setData("1", "2")
+                .setDismissText("关闭")
+                .showDialog();
     }
 
     @Override

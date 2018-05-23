@@ -6,7 +6,9 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -99,7 +101,21 @@ public abstract class BaseActivity extends FragmentActivity {
         xRecyclerView.setArrowImageView(R.mipmap.iconfont_downgrey);
         xRecyclerView.setLoadingMoreEnabled(false);
     }
+    //    横向布局
+    public void iniXrecyclerViewH(RecyclerView recyclerView) {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setLayoutManager(layoutManager);
+    }
 
+    //    竖向布局
+    public void iniXrecyclerViewV(RecyclerView recyclerView) {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setLayoutManager(layoutManager);
+    }
 
     //    空置点击事件
     public void emptyClick(View view) {

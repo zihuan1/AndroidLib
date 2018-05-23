@@ -3,6 +3,7 @@ package com.zihuan.app.activity;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.View;
@@ -15,6 +16,8 @@ import com.zihuan.app.fragment.Fm_1;
 import com.zihuan.app.fragment.Fm_2;
 import com.zihuan.app.fragment.Fm_3;
 import com.zihuan.app.fragment.Fm_4;
+import com.zihuan.app.model.Test;
+import com.zihuan.app.u.Logger;
 import com.zihuan.app.view.NoScrollViewPager;
 
 import java.util.ArrayList;
@@ -23,6 +26,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import lombok.val;
 import me.majiajie.pagerbottomtabstrip.NavigationController;
 import me.majiajie.pagerbottomtabstrip.PageNavigationView;
 import me.majiajie.pagerbottomtabstrip.item.BaseTabItem;
@@ -93,6 +97,8 @@ public class MainActivity extends BaseActivity {
 
             }
         });
+        Test test = Test.builder().name("蛤蛤").build();
+        Logger.tag(test.toString());
     }
 
     @Override
