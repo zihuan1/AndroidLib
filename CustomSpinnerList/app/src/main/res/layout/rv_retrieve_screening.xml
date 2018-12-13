@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/tv_remove"
+        android:layout_width="48dp"
+        android:layout_height="27dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/rl_437c_5cir"
+        android:gravity="center"
+        android:text="移除"
+        android:textColor="@color/colorPrimaryDark"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tv_sr_hint"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/tv_remove"
+        android:background="@drawable/bg_rect_d"
+        android:drawableRight="@mipmap/icon_arrow_right_gray"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="16dp"
+        android:text="请选择检索项"
+        android:textColor="#ff999999"
+        android:textSize="15sp" />
+
+    <EditText
+        android:id="@+id/et_keywords"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/rv_text"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/bg_rect_d"
+        android:hint="请输入关键词"
+        android:maxLines="1"
+        android:paddingLeft="10dp"
+        android:singleLine="true"
+        android:text=""
+        android:textColor="@color/colorPrimaryDark"
+        android:textColorHint="#ff999999"
+        android:textSize="15sp" />
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_text"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_below="@+id/tv_sr_hint"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/rl_437c_5cir" />
+</RelativeLayout>

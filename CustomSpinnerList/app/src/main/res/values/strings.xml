@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">CustomList</string>
+
+
+    <array name="zf1">
+        <item>青青子衿</item>
+        <item>悠悠我心</item>
+        <item>纵我不往</item>
+        <item>子宁不嗣音</item>
+    </array>
+    <array name="zf2">
+        <item>青青子佩</item>
+        <item>悠悠我思</item>
+        <item>纵我不往</item>
+        <item>子宁不来</item>
+    </array>
+    <array name="zf3">
+        <item>挑兮达兮</item>
+        <item>在城阙兮</item>
+        <item>一日不见</item>
+        <item>如三月兮</item>
+    </array>
+</resources>
