@@ -2,13 +2,8 @@ package com.zihuan.app.activity;
 
 
 import android.graphics.Color;
-import android.os.Bundle;
-import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.zihuan.app.R;
 import com.zihuan.app.adapter.ViewPAdapter;
@@ -24,9 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import lombok.val;
 import me.majiajie.pagerbottomtabstrip.NavigationController;
 import me.majiajie.pagerbottomtabstrip.PageNavigationView;
 import me.majiajie.pagerbottomtabstrip.item.BaseTabItem;
@@ -68,14 +60,14 @@ public class MainActivity extends BaseActivity {
 ////                .setDefaultColor(def)
 //                .build();
         List<Fragment> fragments = new ArrayList<>();
-        Fm_1 fmShebei = new Fm_1();
-        Fm_2 fmYijing = new Fm_2();
-        Fm_3 fmGuzhang = new Fm_3();
-        Fm_4 fm_Wode = new Fm_4();
-        fragments.add(fmShebei);
-        fragments.add(fmYijing);
-        fragments.add(fmGuzhang);
-        fragments.add(fm_Wode);
+        Fm_1 home = new Fm_1();
+        Fm_2 page1 = new Fm_2();
+        Fm_3 page2 = new Fm_3();
+        Fm_4 page3 = new Fm_4();
+        fragments.add(home);
+        fragments.add(page1);
+        fragments.add(page2);
+        fragments.add(page3);
         mVPAdapter = new ViewPAdapter(getSupportFragmentManager(), fragments);
         m_vpMain.setAdapter(mVPAdapter);
         mNavigationController.setupWithViewPager(m_vpMain);
