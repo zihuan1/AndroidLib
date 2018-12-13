@@ -1,13 +1,6 @@
----
-title: AndroidLibrary>>快速开发框架
-tags: 框架,模板
----
 
-包含各种快速开发框架
-
-
-<<===[返回首页](https://github.com/zihuan1/AndroidLibrary/tree/master)
-
+AndroidLibrary
+ ---
 
 ---
 基础工程
