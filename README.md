@@ -14,3 +14,8 @@ https://github.com/zihuan1/AndroidLibrary/tree/QrCodeLib2
 自定义下拉列表
 https://github.com/zihuan1/AndroidLibrary/tree/SpinnerList
 ---
+光标自动居中的EditText
+- 当编辑框中的文本超过一行,光标自动居中，否则靠上。
+
+https://github.com/zihuan1/AndroidLibrary/tree/EditAutoCursor
+---
