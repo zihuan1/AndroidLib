@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical"
+    android:padding="15dp">
+
+
+    <TextView
+        android:id="@+id/txtTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:text="Title"
+        android:textColor="@color/orange"
+        android:textSize="18sp" />
+
+    <View
+        android:id="@+id/title_lin"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/txtTitle"
+        android:background="@color/orange"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:id="@+id/rl_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title_lin"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/txtContent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Content"
+            android:textColor="@color/orange"
+            android:textSize="18sp"
+            android:visibility="gone" />
+
+        <EditText
+            android:id="@+id/et_name"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/bg_edittext"
+            android:padding="5dp"
+            android:textCursorDrawable="@drawable/edit_cursor_color" />
+    </RelativeLayout>
+
+
+    <TextView
+        android:id="@+id/tv_other"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rl_content"
+        android:layout_marginTop="20dp"
+        android:layout_toLeftOf="@+id/tv_clare"
+        android:gravity="center"
+        android:padding="16dp"
+        android:text="其他"
+        android:textColor="@color/orange"
+        android:textSize="16sp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tv_clare"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rl_content"
+        android:layout_marginTop="20dp"
+        android:layout_toLeftOf="@+id/tv_yes"
+        android:gravity="center"
+        android:padding="16dp"
+        android:text="取消"
+        android:textColor="@color/orange"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/tv_yes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rl_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="20dp"
+        android:padding="16dp"
+        android:text="完成"
+        android:textColor="@color/orange"
+        android:textSize="16sp" />
+
+</RelativeLayout>
