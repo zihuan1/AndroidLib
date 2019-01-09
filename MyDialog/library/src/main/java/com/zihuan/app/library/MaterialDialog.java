@@ -80,6 +80,10 @@ public class MaterialDialog {
             dialog.getWindow().getAttributes().windowAnimations = R.style.AnimZoomInOut;
         }
 
+        switch (animType){
+
+        }
+
         TextView txtTitle = view.findViewById(R.id.txtTitle);
         TextView txtContent = view.findViewById(R.id.txtContent);
         TextView btnConfirm = view.findViewById(R.id.tv_yes);
