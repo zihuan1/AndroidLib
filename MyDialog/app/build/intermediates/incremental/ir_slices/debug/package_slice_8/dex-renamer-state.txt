@@ -1,4 +1,0 @@
-#Wed Jan 09 14:40:59 CST 2019
-base.0=D\:\\workspace\\demo\\MyDialog\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\8
-path.0=classes.dex
-renamed.0=classes.dex

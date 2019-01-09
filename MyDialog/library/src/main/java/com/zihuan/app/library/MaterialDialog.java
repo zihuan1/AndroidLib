@@ -54,35 +54,29 @@ public class MaterialDialog {
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         lp.gravity = Gravity.CENTER;
         dialog.getWindow().setAttributes(lp);
-
+        int sty = 0;
         if (animType == MDialogAnimUtils.AnimLeft) {
-            dialog.getWindow().getAttributes().windowAnimations = R.style.AnimLeft;
-
+            sty = R.style.AnimLeft;
         } else if (animType == MDialogAnimUtils.AnimRight) {
-            dialog.getWindow().getAttributes().windowAnimations = R.style.AnimRight;
-
+            sty = R.style.AnimRight;
         } else if (animType == MDialogAnimUtils.AnimUp) {
-            dialog.getWindow().getAttributes().windowAnimations = R.style.AnimUp;
+            sty = R.style.AnimUp;
 
         } else if (animType == MDialogAnimUtils.AnimDown) {
-            dialog.getWindow().getAttributes().windowAnimations = R.style.AnimDown;
+            sty = R.style.AnimDown;
 
         } else if (animType == MDialogAnimUtils.AnimLeftRight) {
-            dialog.getWindow().getAttributes().windowAnimations = R.style.AnimLeftRight;
+            sty = R.style.AnimLeftRight;
 
         } else if (animType == MDialogAnimUtils.AnimUpDown) {
-            dialog.getWindow().getAttributes().windowAnimations = R.style.AnimUpDown;
+            sty = R.style.AnimUpDown;
 
         } else if (animType == MDialogAnimUtils.AnimFadeInOut) {
-            dialog.getWindow().getAttributes().windowAnimations = R.style.AnimFadeInOut;
-
+            sty = R.style.AnimFadeInOut;
         } else if (animType == MDialogAnimUtils.AnimZoomInOut) {
-            dialog.getWindow().getAttributes().windowAnimations = R.style.AnimZoomInOut;
+            sty = R.style.AnimZoomInOut;
         }
-
-        switch (animType){
-
-        }
+        dialog.getWindow().getAttributes().windowAnimations = sty;
 
         TextView txtTitle = view.findViewById(R.id.txtTitle);
         TextView txtContent = view.findViewById(R.id.txtContent);
