@@ -179,10 +179,8 @@ public class MaterialDialog {
     }
 
     public static MaterialDialog materialBuilder(Context context) {
-        if (materialDialog == null) {
-            mContext = context;
-            materialDialog = new MaterialDialog();
-        }
+        mContext = context;
+        materialDialog = new MaterialDialog();
         return materialDialog;
     }
 
@@ -240,7 +238,7 @@ public class MaterialDialog {
     }
 
     public MaterialDialog setBackGround(int bgcolor) {
-        this.animType = animType;
+        this.bgcolor = bgcolor;
         return this;
     }
 
