@@ -4,7 +4,7 @@ AndroidLibrary
 
 **基础工程**
 
-https://github.com/zihuan1/AndroidLibrary/tree/BaseWork
+https://github.com/zihuan1/BaseWorkKt
 ---
 **融合了mvp**
 
