@@ -25,7 +25,7 @@ https://github.com/zihuan1/AndroidLibrary/tree/EditAutoCursor
 ---
 **自定义dialog**
 
-https://github.com/zihuan1/MaterialDialog
+https://github.com/zihuan1/ZHMaterialDialog
 ---
 **可拖动的RecycleView**
 
