@@ -2,26 +2,18 @@ package com.zihuan.app.model;
 
 import java.util.ArrayList;
 
-/**
- */
-public class DataListModel extends ArrayList<Object> {
-    private String errorMsg;
-    private int stateCode;
+public class DataListModel<T> extends BaseBeanModel {
 
-    public String getErrorMsg() {
-        return errorMsg;
+    private ArrayList<T> data;
+
+    @Override
+    public ArrayList<T> getData() {
+        return data;
     }
 
-    public void setErrorMsg(String errorMsg) {
-        this.errorMsg = errorMsg;
+    public void setData(ArrayList<T> data) {
+        this.data = data;
     }
 
-    public int getStateCode() {
-        return stateCode;
-    }
-
-    public void setStateCode(int stateCode) {
-        this.stateCode = stateCode;
-    }
 
 }

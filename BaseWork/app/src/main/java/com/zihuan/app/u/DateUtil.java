@@ -3,6 +3,10 @@ package com.zihuan.app.u;
 import android.text.TextUtils;
 import android.util.Log;
 
+
+import com.tripsdiy.app.u.Logger;
+import com.zihuan.app.UserManager;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -46,18 +50,18 @@ public class DateUtil {
             strTime = "" + (int) (interval / iMinute) + "分钟前";
         } else if ((int) (interval / iHour) < 24 && (int) (interval / iHour) > 0) {
             // strTime = "" + (int) (interval / iHour) + "小时前";
-            // strTime = m_sdf.format(mData);
+            // strTime = m_sdf.format(activities);
             // 此处改了
             strTime = "" + (int) (interval / iHour) + "小时前";
         } else if ((int) (interval / iDay) <= 1 && (int) (interval / iDay) > 0) {
             strTime = "" + (int) (interval / iDay) + "天前";
-            // strTime = m_sdf.format(mData);
+            // strTime = m_sdf.format(activities);
 //            strTime = cal.get(java.util.Calendar.YEAR)+"年"+(cal.get(java.util.Calendar.MONTH)+1)+"月"+
 //                    cal.get(java.util.Calendar.DAY_OF_MONTH)+"日";
         }
 //        else if ((int) (interval / iMonth) != 0) {
 //            //  strTime = "" + (int) (interval / iMonth) + "个月前";
-//            //strTime = m_sdf.format(mData);
+//            //strTime = m_sdf.format(activities);
 //            strTime = cal.get(java.util.Calendar.YEAR) + "年" + (cal.get(java.util.Calendar.MONTH) + 1) + "月" +
 //                    cal.get(java.util.Calendar.DAY_OF_MONTH) + "日";
 //        }
@@ -96,17 +100,17 @@ public class DateUtil {
                     cal.get(Calendar.DAY_OF_MONTH) + "日" + dateString;
         } else if ((int) (interval / iMonth) != 0)
             //  strTime = "" + (int) (interval / iMonth) + "个月前";
-            //strTime = m_sdf.format(mData);
+            //strTime = m_sdf.format(activities);
             strTime = (cal.get(Calendar.MONTH) + 1) + "月" +
                     cal.get(Calendar.DAY_OF_MONTH) + "日" + dateString;
         else if ((int) (interval / iDay) != 0)
             // strTime = "" + (int) (interval / iDay) + "天前";
-            // strTime = m_sdf.format(mData);
+            // strTime = m_sdf.format(activities);
             strTime = (cal.get(Calendar.MONTH) + 1) + "月" +
                     cal.get(Calendar.DAY_OF_MONTH) + "日" + dateString;
         else if ((int) (interval / iHour) != 0)
             // strTime = "" + (int) (interval / iHour) + "小时前";
-            // strTime = m_sdf.format(mData);
+            // strTime = m_sdf.format(activities);
             // strTime =  "" + (int) (interval / iHour) + "小时前";
             if ((interval / iHour) >= 2) {
                 strTime = (cal.get(Calendar.MONTH) + 1) + "月" +
@@ -122,18 +126,11 @@ public class DateUtil {
         return strTime;
     }
 
-    // 获得系统时间
-    public static String getSysDate(String type) {
-        if (TextUtils.isEmpty(type)){
-            type="yyyyMMddHHmmss";
-        }
-        String str = getSysTimeType(type);
-        return str;
-    }
-
-
     // 获得系统时间自定义类型
     public static String getSysTimeType(String type) {
+        if (TextUtils.isEmpty(type)) {
+            type = "yyyyMMddHHmmss";
+        }
         SimpleDateFormat formatter = new SimpleDateFormat(type);
         Date curDate = new Date(System.currentTimeMillis());//获取当前时间
         String str = formatter.format(curDate);
@@ -147,36 +144,26 @@ public class DateUtil {
      * @param day  后几天
      * @return
      */
-    public static String getAfterDay(String type, int day) {
+    public static String getAfterDay(String time, String type, int day) {
         SimpleDateFormat formatter = new SimpleDateFormat(type);
 //     Calendar类有一个方法add方法可以使用，例如calendar.add(Calendar.WEEK_OF_YEAR, -1);表示把时间向上推一周，
 //     calendar.add(Calendar.YEAR, -1);表示把时间向上推一年。
         Calendar calendar = Calendar.getInstance();
-        Date date = new Date(System.currentTimeMillis());
+        Date date = null;
+        try {
+            date = formatter.parse(time);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         calendar.setTime(date);
 //        calendar.add(Calendar.WEEK_OF_YEAR, -1);
         calendar.add(Calendar.DAY_OF_MONTH, +day);
         date = calendar.getTime();
         String str = formatter.format(date);
-        Logger.e("向后" + day + "天", "" + date);
+        Logger.INSTANCE.e("向后" + day + "天", "" + str);
         return str + "";
     }
 
-    //    时间戳转换为时间
-    public static String getDate(String time, String type) {
-        if (TextUtils.isEmpty(type)) {
-            type = "yyyy-MM-dd";
-        }
-
-        if (TextUtils.isEmpty(time)) {
-            return "";
-        }
-        long d = Long.parseLong(time);
-        SimpleDateFormat sdf = new SimpleDateFormat(type);
-        String date = sdf.format(new Date(d * 1000));
-//        Logger.tag("data"+ date);
-        return date + "";
-    }
 
     //    时间戳转换为时间
     public static String getDateAmPm(String time, String type) {
@@ -202,43 +189,38 @@ public class DateUtil {
     }
 
 
-    //    将当前时间变为字符串
-    public static String getCurrentStrDate(String type) {
+    //    时间戳转换为时间
+    public static String stampToDate(String time, String type) {
+        if (TextUtils.isEmpty(type)) {
+            type = "yyyy-MM-dd";
+        }
+
+        if (TextUtils.isEmpty(time)) {
+            return "";
+        }
+        long d = Long.parseLong(time);
         SimpleDateFormat sdf = new SimpleDateFormat(type);
-        String date = sdf.format(new Date());
+        String date = sdf.format(new Date(d * 1000));
+//        Logger.tag("data"+ date);
         return date + "";
     }
 
-
-    //    时间转换为时间戳
-//    public static String convert(long mill) {
-//        Date date = new Date(mill);
-//        String strs = "";
-//        try {
-//            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-//            strs = sdf.format(date);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return strs;
-//    }
-
-
     //    转换为时间戳
-    public static String conversion(String string, String type) {
+    public static String dateToStamp(String time, String type) {
         if (TextUtils.isEmpty(type)) {
             type = "yyyy-MM-dd HH:mm:ss";
         }
-        SimpleDateFormat sdf = new SimpleDateFormat(type);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(type);
         Date date = null;
-        int time = 0;
         try {
-            date = sdf.parse(string);
-            time = (int) date.getTime();
+            date = simpleDateFormat.parse(time);
+            long ts = date.getTime() / 1000;
+            time = String.valueOf(ts);
         } catch (ParseException e) {
-            e.printStackTrace();
+            Logger.INSTANCE.tag("时间转换为时间戳异常 " + e.toString());
         }
-        Logger.e("时间戳", " " + time);
+
+//        Logger.INSTANCE.e("时间戳", " " + time);
         return time + "";
     }
 
@@ -265,15 +247,33 @@ public class DateUtil {
         cal.add(Calendar.WEEK_OF_MONTH, c);
         for (int i = 0; i < 7; i++) {
             cal.add(Calendar.DATE, -1 * cal.get(Calendar.DAY_OF_WEEK) + 2 + i);
-            Logger.e("上一周", "" + sf.format(cal.getTime()));
+            Logger.INSTANCE.e("上一周", "" + sf.format(cal.getTime()));
             topWeek.add(sf.format(cal.getTime()) + "");
         }
         return topWeek;
     }
 
+    /**
+     * 获取当前日期是星期几<br>
+     *
+     * @param time
+     * @return 当前日期是星期几
+     */
+    public static String getWeekOfDate(long time) {
+        String[] weekDays = {"星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"};
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date(time));
+        int w = cal.get(Calendar.DAY_OF_WEEK) - 1;
+//        if (w <= 0)
+//            w = 0;
+//        else w--;
+        return weekDays[w];
+    }
+
     //    计算两个时间戳相隔多少天
     public static int getApartDay(String a, String b) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String day1 = sdf.format(new Date(Long.parseLong(a) * 1000));
         String day2 = sdf.format(new Date(Long.parseLong(b) * 1000));
         Date d1 = null;
@@ -282,7 +282,7 @@ public class DateUtil {
             d1 = sdf.parse(day1);
             d2 = sdf.parse(day2);
         } catch (ParseException e) {
-            Logger.tag("异常" + e.toString());
+            Logger.INSTANCE.tag("异常" + e.toString());
         }
         Calendar cal = Calendar.getInstance();
         cal.setTime(d1);
@@ -292,7 +292,7 @@ public class DateUtil {
         long between_days = (time2 - time1) / (1000 * 3600 * 24);
 
 
-        Log.e("between_days", between_days + "天");
+//        Log.e("between_days", between_days + "天");
 
 //        if(between_days == 0) {   //半天
 //            return "半";
@@ -320,9 +320,9 @@ public class DateUtil {
 
             long miao = (diff - days * (1000 * 60 * 60 * 24) - hours * (1000 * 60 * 60) - minutes * (1000 * 60)) / 1000;
 
-            Logger.tag("" + days + "天" + hours + "小时" + minutes + "分" + miao + "秒");
+            Logger.INSTANCE.tag("" + days + "天" + hours + "小时" + minutes + "分" + miao + "秒");
 
-            Logger.tag("diff " + diff);
+            Logger.INSTANCE.tag("diff " + diff);
             if (hours == 0) {
                 return +minutes + ":" + miao;
             } else {
@@ -347,12 +347,12 @@ public class DateUtil {
 
 //            long year = diff / (1000 * 60 * 60 * 24 *365);
 
-            Logger.tag("" + diff);
+            Logger.INSTANCE.tag("" + diff);
 
-            return diff  + "";
+            return diff + "";
 
         } catch (Exception e) {
-            Logger.tag("Exception" + e.toString());
+            Logger.INSTANCE.tag("Exception" + e.toString());
         }
         return "0";
     }
@@ -374,31 +374,12 @@ public class DateUtil {
         try {
             date = sdf.parse(time);
         } catch (ParseException e) {
-            Logger.tag("时间装换成时间戳错误");
+            Logger.INSTANCE.tag("时间装换成时间戳错误");
         }
-        Logger.tag("时间装换成时间戳" + (date.getTime()));
+        Logger.INSTANCE.tag("时间装换成时间戳" + (date.getTime()));
         return date.getTime() / 1000;
     }
 
-    /**
-     * 判断是否今天过生日
-     *
-     * @param time
-     * @return
-     */
-    public static boolean judgeTodayBirthday(Long time) {
-        String today = getCurrentStrDate("MM-dd");
-        String[] todaies = today.split("-");
-        Log.e("todya", today);
-        String strDate = getDate(time + "", "MM-dd");
-        String[] strDates = strDate.split("-");
-        Log.e("strDate", strDate);
-
-        if (todaies[0].equals(strDates[0]) && todaies[1].equals(strDates[1])) {
-            return true;
-        }
-        return false;
-    }
 
     /**
      * 获取今天开始的 0点 0 分
@@ -411,7 +392,6 @@ public class DateUtil {
         return today / 1000;
     }
 
-
     /**
      * 获取今天 结束的 0点 0 分
      *
@@ -423,7 +403,7 @@ public class DateUtil {
     }
 
     public static String getAge(String old) {
-        int i = Integer.parseInt(DateUtil.getDate(old, "yyyy"));
+        int i = Integer.parseInt(DateUtil.stampToDate(old, "yyyy"));
         int j = Integer.parseInt(DateUtil.getSysTimeType("yyyy"));
         return j - i + "";
     }

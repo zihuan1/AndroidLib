@@ -1,29 +1,28 @@
 package com.zihuan.app.task;
 
-import android.os.Handler;
-import android.os.Message;
-
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import com.lzy.okhttputils.callback.AbsCallback;
-import com.zihuan.app.u.Logger;
+import com.tripsdiy.app.u.DataUtils;
+import com.tripsdiy.app.u.Logger;
+import com.zihuan.app.model.BaseBeanModel;
+
+import java.lang.reflect.Type;
 
 import okhttp3.Call;
 import okhttp3.Response;
 
 /**
+ *
  */
 public class OkHttpListener extends AbsCallback {
 
-    Handler m_Handler;
-    int m_What;
-    Object m_Object;
+    RequestCallBack callBack;
+    Type mClassType;
     Gson mGson = new Gson();
 
-    public OkHttpListener(Handler handler, int what, Object object) {
-        this.m_Handler = handler;
-        m_What = what;
-        m_Object = object;
+    public OkHttpListener(RequestCallBack callBack, Type type) {
+        this.callBack = callBack;
+        mClassType = type;
     }
 
     @Override
@@ -33,26 +32,54 @@ public class OkHttpListener extends AbsCallback {
 
     //    成功回调
     @Override
-    public void onSuccess(Object o, Call call, Response response) {
-
+    public void onSuccess(Object json, Call call, Response response) {
         try {
-            m_Object = mGson.fromJson(o.toString(), m_Object.getClass());
-        } catch (JsonSyntaxException e) {
-            Logger.tag("JsonSyntaxException "+e.toString());
+            BaseBeanModel obg = null;
+            if (mClassType != null) {
+                try {
+                    obg = mGson.fromJson(json.toString(), mClassType);
+                } catch (Exception e) {
+                    Logger.INSTANCE.tag("数据解析错误" + e.toString());
+                }
+            }
+            if (DataUtils.INSTANCE.modelIsNotNull(obg)) {
+                if (!DataUtils.INSTANCE.entityIsNotNull(obg)) {
+//                if (!DataUtils.INSTANCE.entityIsNotNull(obg) || !DataUtils.INSTANCE.dataIsNotNull(obg)) {
+                    callBack.onEmptyData(obg);
+                    Logger.INSTANCE.tag("无数据回调");
+                } else {
+                    callBack.onHttpSuccess(obg);
+//                    Logger.INSTANCE.tag("有数据回调");
+                }
+            } else {
+                switch (obg.getStateCode()) {
+                    case 1002://token 验证失败
+                        break;
+                }
+                callBack.onFail(obg.getStateCode(), obg.getErrorMsg());
+            }
+        } catch (Exception e) {
+            Logger.INSTANCE.e("Exception", e.toString());
+            callBack.onHttpError(e);
         }
-        Message message = Message.obtain();
-        message.obj = m_Object;
-        message.what = m_What;
-        m_Handler.sendMessage(message);
-        Logger.tag("接口返回数据 "+o.toString());
+        Logger.INSTANCE.tag("\n-------------------接口返回数据开始-------------------" +
+                "\n接口地址 " + response.request().url() + "\n接口数据 " + json.toString() + "\n" +
+                "-------------------接口返回数据结束-------------------");
     }
-
 
     // 失败后的回调
     @Override
     public void onError(Call call, Response response, Exception e) {
         super.onError(call, response, e);
-        m_Handler.sendEmptyMessage(666);//用来取消刷新动作
+        callBack.onHttpError(e);//用来取消刷新动作
+        try {
+            Logger.INSTANCE.e("onError", e.toString()
+                    + "\n " + response.request().url()
+                    + "\n " + response.code());
+        } catch (Exception e1) {
+            Logger.INSTANCE.tag("出错了");
+        }
+
     }
 
 }

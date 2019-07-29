@@ -3,8 +3,12 @@ package com.zihuan.app.model;
 /**
  */
 public class BaseBeanModel {
-    private String errorMsg;
-    private int stateCode;
+    private String errorMsg = "";
+    private int status;
+
+    public Object getData() {
+        return "";
+    }
 
     public String getErrorMsg() {
         return errorMsg;
@@ -15,18 +19,19 @@ public class BaseBeanModel {
     }
 
     public int getStateCode() {
-        return stateCode;
+        return status;
     }
 
     public void setStateCode(int stateCode) {
-        this.stateCode = stateCode;
+        this.status = stateCode;
     }
 
     @Override
     public String toString() {
         return "BaseBeanModel{" +
                 "errorMsg='" + errorMsg + '\'' +
-                ", stateCode=" + stateCode +
+                ", stateCode=" + status + '\'' +
+                ",getData='" + getData().toString() + '\'' +
                 '}';
     }
 }

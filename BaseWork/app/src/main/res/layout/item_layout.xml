@@ -3,8 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.jcodecraeer.xrecyclerview.XRecyclerView
-        android:id="@+id/xView"
+    <com.zihuan.app.ui.view.RecycleAssViewLayout
+        android:id="@+id/rav_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </LinearLayout>
