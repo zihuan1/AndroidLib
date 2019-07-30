@@ -1,8 +1,16 @@
 package com.zihuan.app.base;
 
+import android.Manifest;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
+import com.github.dfqin.grantor.PermissionListener;
+import com.github.dfqin.grantor.PermissionsUtil;
 import com.jaeger.library.StatusBarUtil;
 import com.tripsdiy.app.u.Logger;
 import com.zihuan.app.Constant;
@@ -71,6 +79,33 @@ public abstract class BaseActivity extends SuperActivity {
             EventBus.getDefault().unregister(this);
         }
     }
+
+    /***
+     * 权限检测
+     * @param per
+     * @return
+     */
+    public boolean checkPermission(String... per) {
+        if (PermissionsUtil.hasPermission(this, per)) {
+            return true;
+        } else {
+            PermissionsUtil.requestPermission(this, permissionListener, per);
+        }
+        return false;
+    }
+
+    PermissionListener permissionListener = new PermissionListener() {
+        @Override
+        public void permissionGranted(@NonNull String[] permission) {
+
+        }
+
+        @Override
+        public void permissionDenied(@NonNull String[] permission) {
+
+        }
+    };
+
 
     // 获取布局文件
     public abstract int getLayoutId();
