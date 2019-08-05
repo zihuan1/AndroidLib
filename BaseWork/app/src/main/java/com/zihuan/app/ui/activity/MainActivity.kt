@@ -1,10 +1,12 @@
 package com.zihuan.app.ui.activity
 
 
+import android.os.Environment
 import android.support.v4.app.Fragment
 import android.support.v4.view.ViewPager
 import android.view.KeyEvent
 import com.jaeger.library.StatusBarUtil
+import com.tripsdiy.app.u.FileUtils
 import com.zihuan.app.R
 import com.zihuan.app.adapter.ViewPAdapter
 import com.zihuan.app.base.BaseActivity
@@ -13,7 +15,9 @@ import com.zihuan.app.u.U
 import com.zihuan.app.ui.fragment.Fm_2
 import kotlinx.android.synthetic.main.activity_main.*
 import org.greenrobot.eventbus.Subscribe
+import java.io.File
 import java.util.*
+import kotlin.collections.ArrayList
 
 class MainActivity : BaseActivity() {
 
@@ -43,7 +47,6 @@ class MainActivity : BaseActivity() {
                 }
             }
         })
-//        GoogleManager.requestPers()
         enableEventBus()
     }
 

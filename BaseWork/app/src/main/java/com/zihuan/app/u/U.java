@@ -31,15 +31,22 @@ import android.widget.Toast;
 import com.tripsdiy.app.u.Logger;
 import com.zihuan.app.MainApplication;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.StreamCorruptedException;
+import java.nio.channels.FileChannel;
+import java.nio.channels.WritableByteChannel;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,6 +55,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import kotlin.Unit;
+import kotlin.io.CloseableKt;
+import kotlin.jvm.internal.Intrinsics;
 
 
 public class U {
@@ -59,6 +70,62 @@ public class U {
                 context.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
+    public final void stringMerge(@NotNull List files) {
+        String outPath = Environment.getExternalStorageDirectory().toString() + "/amergecode/mergecode1.txt";
+        FileOutputStream outOs = null;
+        try {
+            outOs = new FileOutputStream(new File(outPath));
+        } catch (FileNotFoundException e) {
+
+
+        }
+        Closeable var4 = (Closeable)outOs;
+        boolean var5 = false;
+        Throwable var6 = (Throwable)null;
+
+        try {
+            FileOutputStream it = (FileOutputStream)var4;
+            Closeable var9 = (Closeable)it.getChannel();
+            boolean var10 = false;
+            Throwable var11 = (Throwable)null;
+
+            try {
+                FileChannel fileChannel = (FileChannel)var9;
+                Iterable $this$forEach$iv = (Iterable)files;
+                Iterator var16 = $this$forEach$iv.iterator();
+
+                while(var16.hasNext()) {
+                    Object element$iv = var16.next();
+                    File it1 = (File)element$iv;
+                    Closeable var20 = (Closeable)(new FileInputStream(it1.getAbsoluteFile())).getChannel();
+                    boolean var21 = false;
+                    Throwable var22 = (Throwable)null;
+
+                    try {
+                        FileChannel it2 = (FileChannel)var20;
+                        long var50 = it2.transferTo(0L, it2.size(), (WritableByteChannel)fileChannel);
+                    } catch (Throwable var44) {
+                        var22 = var44;
+                        throw var44;
+                    } finally {
+                    }
+                }
+
+                Unit var52 = Unit.INSTANCE;
+            } catch (Throwable var46) {
+                var11 = var46;
+                throw var46;
+            } finally {
+            }
+
+            Unit var51 = Unit.INSTANCE;
+        } catch (Throwable var48) {
+            var6 = var48;
+        } finally {
+        }
+
+    }
+
 
     //把dp转换成px
     public static int dip2px(Context context, float dpValue) {

@@ -55,14 +55,21 @@ object FileUtils {
         return files
     }
 
-    /** 将多个文件夹的内容合并到一个新文件 **/
+    /**
+     *  将多个文件夹的内容合并到一个新文件
+     * 与 getFilesPath()方法结合使用
+     *      Demo
+     *      var list = ArrayList<File>()
+     *      FileUtils.getFilesPath(Environment.getExternalStorageDirectory().toString() + "/src/", list)
+     *      FileUtils.stringMerge(list)
+     * **/
     fun stringMerge(files: List<File>) {
         var outPath = Environment.getExternalStorageDirectory().toString() + "/amergecode/mergecode1.txt"
         var outOs = FileOutputStream(File(outPath))
         outOs.use {
             it.channel.use { fileChannel ->
                 files.forEach { it ->
-                    FileInputStream(it.absoluteFile).channel.use { it.transferTo(0, it.size(), fileChannel) }
+                    FileInputStream(it.absoluteFile).channel.use { it -> it.transferTo(0, it.size(), fileChannel) }
                 }
             }
         }
@@ -255,7 +262,7 @@ object FileUtils {
         }
         // 删除当前目录
         return if (dirFile.delete()) {
-            Logger.tag( "Copy_Delete.deleteDirectory: 删除目录" + filePath + "成功！")
+            Logger.tag("Copy_Delete.deleteDirectory: 删除目录" + filePath + "成功！")
             true
         } else {
             Logger.tag("删除目录：" + filePath + "失败！")

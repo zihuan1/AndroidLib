@@ -7,6 +7,7 @@ import android.util.Log;
 import com.tripsdiy.app.u.Logger;
 import com.zihuan.app.UserManager;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
