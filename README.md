@@ -29,5 +29,5 @@ https://github.com/zihuan1/ZHMaterialDialog
 ---
 **可拖动的RecycleView**
 
-https://github.com/zihuan1/AndroidLibrary/tree/dragView
+https://github.com/zihuan1/ZHDragView
 ---
