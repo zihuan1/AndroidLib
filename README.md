@@ -31,3 +31,23 @@ https://github.com/zihuan1/ZHMaterialDialog
 
 https://github.com/zihuan1/ZHDragView
 ---
+**左滑删除**
+
+https://github.com/zihuan1/ZHAutoScrollView
+---
+**AndroidStudio自动翻译插件**
+
+https://github.com/zihuan1/ZHTranslationPlugin
+---
+**特殊字符View**
+
+https://github.com/zihuan1/SpecialTextView
+---
+**RSA分段加密工具**
+
+https://github.com/zihuan1/RSAUtils
+---
+**RecyclerAdapter**
+
+https://github.com/zihuan1/RecyclerAdapter
+---
