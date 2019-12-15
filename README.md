@@ -43,6 +43,10 @@ https://github.com/zihuan1/view-complete-recyclerview
 
 https://github.com/zihuan1/view-recycler-adapter
 ---
+**RecyclerView工具**
+
+https://github.com/zihuan1/view-utils-recyclerhelper
+---
 **可拖动的RecycleView**
 
 https://github.com/zihuan1/view-recycler-drag
@@ -50,6 +54,10 @@ https://github.com/zihuan1/view-recycler-drag
 **左滑删除**
 
 https://github.com/zihuan1/view-autoscrollview
+---
+**侧滑菜单**
+
+https://github.com/zihuan1/view-slidemenu
 ---
 **特殊字符View**
 
