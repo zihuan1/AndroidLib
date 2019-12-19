@@ -69,8 +69,18 @@ dependencies {
     implementation 'com.github.ittianyu:BottomNavigationViewEx:2.0.4'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.makeramen:roundedimageview:2.3.0'
-    //    多色值字符
-    implementation 'com.github.zihuan1:SpecialTextView:1.26'
+    // Anko Commons
+    implementation "org.jetbrains.anko:anko-commons:$anko_version"
+    implementation "org.jetbrains.anko:anko-sdk25-coroutines:$anko_version"
+    implementation "org.jetbrains.anko:anko-sdk25:$anko_version"
+// view扩展
+    implementation 'com.github.zihuan1:view-utils-helper:latest.integration'
+//    dialog
+    implementation 'com.github.zihuan1:view-grace-dialog:latest.integration'
+//    一行代码搞定RecyclerView
+//    implementation 'com.github.zihuan1:view-grace-recyclerview:0.2.6'
+//    RecyclerView适配器
+//    implementation 'com.github.zihuan1:view-recycler-adapter:0.1'
     implementation 'com.github.zihuan1:view-complete-recyclerview:latest.integration'
     //    加载图片扩展
     implementation 'com.github.zihuan1:view-utils-Imagehelper:latest.integration'
