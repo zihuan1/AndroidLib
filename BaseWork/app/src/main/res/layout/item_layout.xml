@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.zihuan.app.ui.view.RecycleAssViewLayout
+    <com.zihuan.view.completelibrary.ZCompleteRecyclerView
         android:id="@+id/rav_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

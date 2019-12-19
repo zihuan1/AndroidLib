@@ -2,12 +2,12 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
 android {
-    compileSdkVersion 26
+    compileSdkVersion 28
 
     defaultConfig {
         applicationId "com.zihuan1.app"
         minSdkVersion 20
-        targetSdkVersion 26
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
     }
@@ -21,20 +21,20 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    signingConfigs {//jks要放在app目录下
-        release {
-            storeFile file("debug.jks")
-            storePassword "android"
-            keyAlias "androiddebugkey"
-            keyPassword "android"
-        }
-        debug {
-            storeFile file("debug.jks")
-            storePassword "android"
-            keyAlias "androiddebugkey"
-            keyPassword "android"
-        }
-    }
+//    signingConfigs {//jks要放在app目录下
+//        release {
+//            storeFile file("debug.jks")
+//            storePassword "android"
+//            keyAlias "androiddebugkey"
+//            keyPassword "android"
+//        }
+//        debug {
+//            storeFile file("debug.jks")
+//            storePassword "android"
+//            keyAlias "androiddebugkey"
+//            keyPassword "android"
+//        }
+//    }
     dataBinding {
         enabled = true
     }
@@ -63,30 +63,19 @@ dependencies {
     implementation 'com.github.dfqin:grantor:2.5'
     //    dialog
     implementation 'com.github.ForgetAll:LoadingDialog:v1.0.4'
-    //    rsa加密工具
-    implementation 'com.github.zihuan1:RSAUtils:1.0'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
     implementation 'io.reactivex.rxjava2:rxjava:2.1.2'
 //    导航栏
-    implementation 'com.github.ittianyu:BottomNavigationViewEx:1.2.4'
+    implementation 'com.github.ittianyu:BottomNavigationViewEx:2.0.4'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.makeramen:roundedimageview:2.3.0'
-    implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-31'
-    implementation 'com.scwang.smartrefresh:SmartRefreshHeader:1.1.0-alpha-31'//没有使用特殊Header，可以不加这行
     //    多色值字符
     implementation 'com.github.zihuan1:SpecialTextView:1.26'
-    implementation 'com.github.zihuan1:RecyclerAdapter:1.0'
-}
-configurations.all {
+    implementation 'com.github.zihuan1:view-complete-recyclerview:latest.integration'
+    //    加载图片扩展
+    implementation 'com.github.zihuan1:view-utils-Imagehelper:latest.integration'
 
-    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
-        def requested = details.requested
-        if (requested.group == 'com.android.support') {
-            if (!requested.name.startsWith("multidex")) {
-                details.useVersion '26.0.1'//默认使用的版本
-            }
-        }
-    }
+
 }
 repositories {
     mavenCentral()

@@ -29,7 +29,7 @@ class Fm_2 : BaseFragment() {
             mDemoData.add(entity)
         }
         rav_layout.buildVerticalLayout(demoAdapter)
-                .setOnRefreshLoadMoreListener(object : OnRefreshLoadMoreListener {
+                .setLoadListener(object : OnRefreshLoadMoreListener {
                     override fun onRefresh(refreshLayout: RefreshLayout) {
                         test()
                     }

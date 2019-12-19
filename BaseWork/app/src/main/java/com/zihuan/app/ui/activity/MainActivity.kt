@@ -1,12 +1,12 @@
 package com.zihuan.app.ui.activity
 
 
-import android.os.Environment
-import android.support.v4.app.Fragment
-import android.support.v4.view.ViewPager
 import android.view.KeyEvent
+import androidx.fragment.app.Fragment
+import androidx.viewpager.widget.ViewPager
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.bottomnavigation.LabelVisibilityMode
 import com.jaeger.library.StatusBarUtil
-import com.tripsdiy.app.u.FileUtils
 import com.zihuan.app.R
 import com.zihuan.app.adapter.ViewPAdapter
 import com.zihuan.app.base.BaseActivity
@@ -15,16 +15,10 @@ import com.zihuan.app.u.U
 import com.zihuan.app.ui.fragment.Fm_2
 import kotlinx.android.synthetic.main.activity_main.*
 import org.greenrobot.eventbus.Subscribe
-import java.io.File
-import java.util.*
-import kotlin.collections.ArrayList
 
 class MainActivity : BaseActivity() {
 
-    override fun getLayoutId(): Int {
-        return R.layout.activity_main
-    }
-
+    override fun getLayoutId() = R.layout.activity_main
 
     override fun initView() {
         StatusBarUtil.setTranslucentForImageViewInFragment(this@MainActivity, null)
@@ -37,8 +31,8 @@ class MainActivity : BaseActivity() {
         //        预加载3个页面
         vp_main.offscreenPageLimit = 5
         bnve.setupWithViewPager(vp_main)
-        bnve.enableShiftingMode(false)
-        bnve.enableItemShiftingMode(false)
+        bnve.labelVisibilityMode = LabelVisibilityMode.LABEL_VISIBILITY_SELECTED
+        bnve.isItemHorizontalTranslationEnabled = false
         vp_main.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {}
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}

@@ -5,8 +5,9 @@ import com.zihuan.app.R
 import com.zihuan.app.model.UserEntity
 import com.zihuan.baseadapter.RecyclerAdapter
 import com.zihuan.baseadapter.RecyclerViewHolder
+import com.zihuan.view.crvlibrary.ZRecyclerData
 
-class DemoAdapter(`object`: Any?) : RecyclerAdapter(`object`) {
+class DemoAdapter(`object`: Any?) : RecyclerAdapter(`object`),ZRecyclerData {
     override fun convert(holder: RecyclerViewHolder, position: Int, context: Context) {
         var entity = getEntity<UserEntity>(position)
         var tv_name = holder.getTextView(R.id.tv_name)
