@@ -2,18 +2,17 @@ package com.zihuan.app
 
 
 import com.zihuan.app.model.UserEntity
-import com.zihuan.app.u.U
+import com.zihuan.utils.cmhlibrary.savePreference
 
-object UserManager  {
+object UserManager {
 
     var userData = UserEntity()
 
     fun save(user: UserEntity) {
         userData = user
-        U.savePreferences("uid", userData.uid)
-        U.savePreferences("token", userData.token)
+        userData.uid?.savePreference("uid")
+        userData.token?.savePreference("token")
     }
-
 
 
 }

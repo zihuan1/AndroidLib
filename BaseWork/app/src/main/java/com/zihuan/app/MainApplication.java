@@ -16,6 +16,8 @@ import com.scwang.smartrefresh.layout.api.RefreshHeader;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
+import com.zihuan.utils.cmhlibrary.CommonHelperCreate;
+import com.zihuan.utils.cmhlibrary.CommonHelperCreateKt;
 
 import java.util.ArrayList;
 
@@ -29,8 +31,8 @@ public class MainApplication extends Application {
     public void onCreate() {
         super.onCreate();
         mainApplication = this;
-//        CrashHandler.getInstance().init(this);
         initOkHttp();
+        CommonHelperCreate.INSTANCE.setContext(this);
         dm = new DisplayMetrics();
     }
     //static 代码段可以防止内存泄露

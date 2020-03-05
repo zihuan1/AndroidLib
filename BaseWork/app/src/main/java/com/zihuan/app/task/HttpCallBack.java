@@ -23,4 +23,9 @@ public class HttpCallBack<T> implements RequestCallBack<T> {
     public void onEmptyData(T data) {
 
     }
+
+    @Override
+    public void onJsonString(String json) {
+
+    }
 }

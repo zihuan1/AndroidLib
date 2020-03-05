@@ -2,9 +2,12 @@ package com.zihuan.app.task;
 
 import com.google.gson.Gson;
 import com.lzy.okhttputils.callback.AbsCallback;
-import com.tripsdiy.app.u.DataUtils;
-import com.tripsdiy.app.u.Logger;
+import com.orhanobut.logger.Logger;
+import com.zihuan.app.BuildConfig;
 import com.zihuan.app.model.BaseBeanModel;
+import com.zihuan.app.u.ZHDataUtils;
+
+import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 
@@ -25,59 +28,74 @@ public class OkHttpListener extends AbsCallback {
         mClassType = type;
     }
 
+    public OkHttpListener(RequestCallBack callBack) {
+        this.callBack = callBack;
+    }
+
     @Override
     public Object parseNetworkResponse(Response response) throws Exception {
         return response.body().string();
     }
 
-    //    成功回调
     @Override
     public void onSuccess(Object json, Call call, Response response) {
         try {
             BaseBeanModel obg = null;
+            if (BuildConfig.DEBUG)
+                if (json.toString().isEmpty()) {
+                    new NullPointerException("接口返回的数据为空");
+                }
+            callBack.onJsonString(json.toString());
             if (mClassType != null) {
-                try {
-                    obg = mGson.fromJson(json.toString(), mClassType);
-                } catch (Exception e) {
-                    Logger.INSTANCE.tag("数据解析错误" + e.toString());
-                }
-            }
-            if (DataUtils.INSTANCE.modelIsNotNull(obg)) {
-                if (!DataUtils.INSTANCE.entityIsNotNull(obg)) {
-//                if (!DataUtils.INSTANCE.entityIsNotNull(obg) || !DataUtils.INSTANCE.dataIsNotNull(obg)) {
-                    callBack.onEmptyData(obg);
-                    Logger.INSTANCE.tag("无数据回调");
-                } else {
+                obg = mGson.fromJson(json.toString(), mClassType);
+                if (BuildConfig.DEBUG)
+                    if (obg == null) {
+                        new NullPointerException("BaseBeanModel为空" + json.toString());
+                    }
+                Logger.e("请求失败" + obg.toString());
+                if (obg.getStateCode() != 0) {
+                    switch (obg.getStateCode()) {
+                        //token 验证失败
+                        case 1002:
+//                            EventBus.getDefault().post(new EventData(Constant.INSTANCE.getLOGOUT()));
+                            break;
+                    }
+                    Logger.e("请求失败" + obg.toString());
+                    callBack.onFail(obg.getStateCode(), obg.getErrorMsg());
+                } else if (ZHDataUtils.INSTANCE.entityIsNotNull(obg)) {
                     callBack.onHttpSuccess(obg);
-//                    Logger.INSTANCE.tag("有数据回调");
+                } else {
+                    callBack.onEmptyData(obg);
+                    Logger.e("无数据回调");
                 }
-            } else {
-                switch (obg.getStateCode()) {
-                    case 1002://token 验证失败
-                        break;
+                if (json.toString().length() < 2000) {
+                    Logger.e("2接口地址 " + response.request().url()
+                            + "\n接口数据" + new JSONObject(json.toString()).toString(1));
+                } else {
+                    Logger.e("2接口地址 " + response.request().url()
+                            + "\n接口数据" + new JSONObject(json.toString()).toString());
                 }
-                callBack.onFail(obg.getStateCode(), obg.getErrorMsg());
             }
+
         } catch (Exception e) {
-            Logger.INSTANCE.e("Exception", e.toString());
-            callBack.onHttpError(e);
+            Logger.e("请求异常" + e.toString()
+                    + "\n" + response.request().url()
+                    + "\n接口数据" + json.toString());
+//            callBack.onHttpError(e);
         }
-        Logger.INSTANCE.tag("\n-------------------接口返回数据开始-------------------" +
-                "\n接口地址 " + response.request().url() + "\n接口数据 " + json.toString() + "\n" +
-                "-------------------接口返回数据结束-------------------");
     }
 
-    // 失败后的回调
     @Override
     public void onError(Call call, Response response, Exception e) {
         super.onError(call, response, e);
-        callBack.onHttpError(e);//用来取消刷新动作
+        //用来取消刷新动作
+        callBack.onHttpError(e);
         try {
-            Logger.INSTANCE.e("onError", e.toString()
+            Logger.e("onError" + e.toString()
                     + "\n " + response.request().url()
                     + "\n " + response.code());
         } catch (Exception e1) {
-            Logger.INSTANCE.tag("出错了");
+            Logger.e("出错了" + e.toString());
         }
 
     }

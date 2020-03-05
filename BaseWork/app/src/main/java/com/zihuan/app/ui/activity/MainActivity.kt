@@ -4,17 +4,16 @@ package com.zihuan.app.ui.activity
 import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomnavigation.LabelVisibilityMode
 import com.jaeger.library.StatusBarUtil
 import com.zihuan.app.R
 import com.zihuan.app.adapter.ViewPAdapter
 import com.zihuan.app.base.BaseActivity
 import com.zihuan.app.model.EventData
-import com.zihuan.app.u.U
 import com.zihuan.app.ui.fragment.Fm_2
 import kotlinx.android.synthetic.main.activity_main.*
 import org.greenrobot.eventbus.Subscribe
+import org.jetbrains.anko.toast
 
 class MainActivity : BaseActivity() {
 
@@ -61,10 +60,9 @@ class MainActivity : BaseActivity() {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_DOWN) {
             if (System.currentTimeMillis() - exitTime > 2000) {
                 exitTime = System.currentTimeMillis()
-                U.ShowToast("再按一次退出")
+                toast("再按一次退出")
             } else {
                 finish()
-                System.exit(0)
             }
             return true
         }

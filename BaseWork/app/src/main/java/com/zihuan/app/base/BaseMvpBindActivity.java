@@ -1,8 +1,9 @@
 package com.zihuan.app.base;
 
+import android.os.Bundle;
+
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
-import android.os.Bundle;
 
 
 public abstract class BaseMvpBindActivity<P extends BasePresenter> extends BaseMvpActivity<P> {
@@ -10,7 +11,7 @@ public abstract class BaseMvpBindActivity<P extends BasePresenter> extends BaseM
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        layoutLazy=true;
+        mLazy=true;
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, getLayoutId());
         initView();

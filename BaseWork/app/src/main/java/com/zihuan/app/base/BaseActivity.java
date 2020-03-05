@@ -2,44 +2,51 @@ package com.zihuan.app.base;
 
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-
-import com.github.dfqin.grantor.PermissionListener;
-import com.github.dfqin.grantor.PermissionsUtil;
 import com.jaeger.library.StatusBarUtil;
-import com.tripsdiy.app.u.Logger;
-import com.zihuan.app.Constant;
+import com.orhanobut.logger.Logger;
 import com.zihuan.app.MainApplication;
 import com.zihuan.app.R;
-import com.zihuan.app.UserManager;
-import com.zihuan.app.u.U;
+import com.zihuan.utils.cmhlibrary.CommonHeplerKt;
 
 import org.greenrobot.eventbus.EventBus;
+
+import static com.zihuan.utils.cmhlibrary.CommonHeplerKt.ShowToast;
 
 
 public abstract class BaseActivity extends SuperActivity {
     public String uid;
     public String token = "";
-    public boolean layoutLazy;//布局延迟加载
+    protected boolean initLazy;
+    protected boolean layoutLazy;
+    public int count = 20;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (!U.CheckNetworkConnected()) {
-            U.ShowToast("请检测网络后再试");
+        if (!CommonHeplerKt.checkNetworkConnected()) {
+           ShowToast("请检测网络后再试");
         }
+//        设置系统默认语言
+//        Configuration configuration = getResources().getConfiguration();
+//        configuration.locale = Locale.ENGLISH;
+//        getResources().updateConfiguration(configuration, getResources().getDisplayMetrics());
         if (!layoutLazy) {
             setContentView(getLayoutId());
+//            Logger.INSTANCE.tag("加载布局");
+        } else {
+//            Logger.INSTANCE.tag("不加载布局");
         }
         StatusBarUtil.setColorNoTranslucent(this, getResources().getColor(R.color.color_3000));
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         getUid();
-        if (!layoutLazy) {
+        if (!initLazy) {
             initView();
             initData();
         }
-        Logger.INSTANCE.tag(getComponentName().getClassName());
+//        Logger.INSTANCE.tag(getComponentName().getClassName());
+//        LogUtils.error(getClass(),getComponentName().getClassName());
         MainApplication.getInstance().addActivity(this);
+        Logger.e("当前页面"+getComponentName().getClassName());
     }
 
     @Override
@@ -48,9 +55,14 @@ public abstract class BaseActivity extends SuperActivity {
         getUid();
     }
 
+
+
+
     public void getUid() {
-        uid = UserManager.INSTANCE.getUserData().getUid();
-        token = U.MD5(UserManager.INSTANCE.getUserData().getToken() + "_" + Constant.INSTANCE.getAPI_KEY());
+//        uid = UserManager.INSTANCE.getUserData().getUser_id();
+//        token = U.MD5(UserManager.INSTANCE.getUserData().getUser_token() + "_" + Constant.INSTANCE.getAPI_KEY());
+//        Logger.INSTANCE.tag("User_id " + uid);
+//        Logger.INSTANCE.tag("User_token " + token);
     }
 
     public boolean isLogin() {
@@ -60,6 +72,13 @@ public abstract class BaseActivity extends SuperActivity {
         return false;
     }
 
+    public boolean isNotLogin() {
+        if (!isNoNull(uid)) {
+//            startSuperActivity(LoginActivity.class);
+            return true;
+        }
+        return false;
+    }
 
     public void enableEventBus() {
         if (!EventBus.getDefault().isRegistered(this)) {
@@ -74,33 +93,6 @@ public abstract class BaseActivity extends SuperActivity {
             EventBus.getDefault().unregister(this);
         }
     }
-
-    /***
-     * 权限检测
-     * @param per
-     * @return
-     */
-    public boolean checkPermission(String... per) {
-        if (PermissionsUtil.hasPermission(this, per)) {
-            return true;
-        } else {
-            PermissionsUtil.requestPermission(this, permissionListener, per);
-        }
-        return false;
-    }
-
-    PermissionListener permissionListener = new PermissionListener() {
-        @Override
-        public void permissionGranted(@NonNull String[] permission) {
-
-        }
-
-        @Override
-        public void permissionDenied(@NonNull String[] permission) {
-
-        }
-    };
-
 
     // 获取布局文件
     public abstract int getLayoutId();
