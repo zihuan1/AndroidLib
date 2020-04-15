@@ -12,7 +12,7 @@ https://github.com/zihuan1/AndroidLibrary/tree/MVPBaseWork
 ---
 **二维码扫描**
 
-https://github.com/zihuan1/AndroidLibrary/tree/QrCodeLib2
+https://github.com/zihuan1/utils-qrcode
 ---
 **自定义下拉列表**
 
