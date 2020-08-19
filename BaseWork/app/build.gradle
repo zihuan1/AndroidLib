@@ -5,7 +5,7 @@ android {
     compileSdkVersion 28
 
     defaultConfig {
-        applicationId "com.zihuan1.app"
+        applicationId "com.zihuan.app"
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
@@ -86,6 +86,9 @@ dependencies {
     implementation 'com.github.zihuan1:utils-common-helper:latest.integration'
     //    加载图片扩展
     implementation 'com.github.zihuan1:view-utils-Imagehelper:latest.integration'
+
+    implementation 'com.zhihu.android:matisse:0.5.2-beta3'
+
 }
 
 configurations.all {

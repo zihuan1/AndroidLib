@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <com.zihuan.view.completelibrary.ZCompleteRecyclerView
+    <TextView
+        android:id="@+id/tvTest"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:text="测试"
+        android:visibility="visible" />
+
+    <com.zihuan.view.completelibrary.RefreshRecyclerView
         android:id="@+id/rav_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
