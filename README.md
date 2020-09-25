@@ -73,7 +73,7 @@ https://github.com/zihuan1/utils-encryption
 ---
 **ImageView扩展**
 
-https://github.com/zihuan1/view-utils-Imagehelper
+https://github.com/zihuan1/view-utils-ImageExt
 ---
 **View通用扩展**
 
